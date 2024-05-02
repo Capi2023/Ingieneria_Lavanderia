@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Ver Pedidos</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="mb-3">Servicios sin pedido</h2>
+            {% if tiposervicios_sin_pedido %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Cantidad de Ropa</th>
+                            <th>Tipo de Ropa</th>
+                            <th>Detalles Extra</th>
+                            <th>Dirección de Entrega</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for servicio in tiposervicios_sin_pedido %}
+                        <tr>
+                            <td>{{ servicio.cantidad_ropa }}</td>
+                            <td>{{ servicio.tipo_ropa }}</td>
+                            <td>{{ servicio.detalles_extra }}</td>
+                            <td>{{ servicio.dir_entrega }}</td>
+                            <td>
+                                <form action="{% url 'ver_pedidos' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="decision" value="aceptar">
+                                    <input type="hidden" name="tipo_servicio_id" value="{{ servicio.id }}">
+                                    <button type="submit" class="btn btn-success btn-sm">Crear Pedido</button>
+                                </form>
+                                <form action="{% url 'ver_pedidos' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="decision" value="rechazar">
+                                    <input type="hidden" name="tipo_servicio_id" value="{{ servicio.id }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Cancelar Servicio</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>No hay servicios sin pedido disponibles.</p>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h2 class="mb-3">Servicios con pedido</h2>
+            {% if tiposervicios_con_pedido %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Cantidad de Ropa</th>
+                            <th>Tipo de Ropa</th>
+                            <th>Detalles Extra</th>
+                            <th>Dirección de Entrega</th>
+                            <th>Admin</th>
+                            <th>Repartidor</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for servicio in tiposervicios_con_pedido %}
+                        <tr>
+                            <td>{{ servicio.cantidad_ropa }}</td>
+                            <td>{{ servicio.tipo_ropa }}</td>
+                            <td>{{ servicio.detalles_extra }}</td>
+                            <td>{{ servicio.dir_entrega }}</td>
+                            <td>{{ servicio.pedidos.admin }}</td>
+                            <td>{{ servicio.pedidos.rep }}</td>
+                            <td>
+                                <a href="{% url 'gestionar_pedido' servicio.pedidos.id %}" class="btn btn-outline-warning btn-sm">Gestionar</a>
+                                <!-- Aquí necesitas definir la acción para el botón "Levantar Pedido" -->
+                                <form action="#" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-warning btn-sm">Levantar Pedido</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>No hay servicios con pedido disponibles.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

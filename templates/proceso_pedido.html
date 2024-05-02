@@ -1,0 +1,27 @@
+<!-- proceso_pedido.html -->
+{% extends 'base_cliente.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Tus pedidos en proceso</h1>
+    {% if pedidos_en_proceso %}
+    <div class="row">
+        {% for pedido in pedidos_en_proceso %}
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
+                    <p class="card-text">Fecha: {{ pedido.fecha_actual }}</p>
+                    <p class="card-text">Hora: {{ pedido.hora }}</p>
+                    <p class="card-text">Tipo: {{ pedido.lavado }}</p>
+                    <!-- Agrega más información del pedido si es necesario -->
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No hay pedidos en proceso.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h1 class="mb-4">Panel de Administrador</h1>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gestionar Usuarios</h5>
+                    <p class="card-text">Administra los usuarios del sistema.</p>
+                    <a href="{% url 'ver_usuarios' %}" class="btn btn-primary btn-lg btn-block">Ver Usuarios</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gestionar Rutas</h5>
+                    <p class="card-text">Administra las rutas de reparto.</p>
+                    <a href="#" class="btn btn-primary btn-lg btn-block">Ver Rutas</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gestionar Servicios</h5>
+                    <p class="card-text">Administra los servicios de lavado.</p>
+                    <a href="#" class="btn btn-primary btn-lg btn-block">Ver Servicios</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Nuevo botón para gestionar pedidos -->
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Gestionar Pedidos</h5>
+                    <p class="card-text">Administra los pedidos de los clientes.</p>
+                    <a href="{% url 'ver_pedidos' %}" class="btn btn-primary btn-lg btn-block">Ver Pedidos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Agrega más tarjetas según las secciones que desees incluir -->
+</div>
+
+{% endblock content %}

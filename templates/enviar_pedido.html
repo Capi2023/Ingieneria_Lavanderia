@@ -1,0 +1,28 @@
+{% extends 'base_cliente.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Enviar Pedido</h1>
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_cantidad_ropa" class="form-label">Cantidad de Ropa:</label>
+            {{ form.cantidad_ropa }}
+        </div>
+        <div class="mb-3">
+            <label for="id_tipo_ropa" class="form-label">Tipo de Ropa:</label>
+            {{ form.tipo_ropa }}
+        </div>
+        <div class="mb-3">
+            <label for="id_tipo_servicio" class="form-label">Tipo de Servicio:</label>
+            {{ form.tipo_servicio }}
+        </div>
+        <div class="mb-3">
+            <label for="id_detalles_extra" class="form-label">Detalles Extras:</label>
+            {{ form.detalles_extra }}
+        </div>
+        <input type="hidden" name="cliente" value="{{ form.cliente.initial }}">
+        <input type="hidden" name="dir_entrega" value="{{ form.dir_entrega.initial }}">
+        <button type="submit" class="btn btn-primary">Enviar Pedido</button>
+    </form>
+</div>
+{% endblock content %}

@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Perfil</h5>
-                    <p class="card-text">Administra la información de tu perfil.</p>
+                    <p class="card-text">Administra la información de tu perfil</p>
                     <a href="{% url 'perfil' %}" class="btn btn-primary btn-lg btn-block">Ver Perfil</a>
                 </div>
             </div>
@@ -17,9 +17,18 @@
         <div class="col-md-4 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Mandar Ropa</h5>
-                    <p class="card-text">Envía tu ropa para ser lavada.</p>
-                    <a href="{% url 'enviar_pedido' %}" class="btn btn-primary btn-lg btn-block">Enviar Ropa</a>
+                    <h5 class="card-title">Crear mis tipos de servicio</h5>
+                    <p class="card-text">Crea los tipos de servicios</p>
+                    <a href="{% url 'crea_tipos_servicio' %}" class="btn btn-primary btn-lg btn-block">Enviar Ropa</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Crear pedido</h5>
+                    <p class="card-text">Envía tu ropa para ser lavada</p>
+                    <a href="{% url 'juntar_pedidos' %}" class="btn btn-primary btn-lg btn-block">Crear pedido</a>
                 </div>
             </div>
         </div>
@@ -27,13 +36,12 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Ropa en Proceso</h5>
-                    <p class="card-text">Consulta el estado de tu ropa en proceso.</p>
+                    <p class="card-text">Consulta el estado de tu ropa en proceso</p>
                     <a href="{% url 'pedidos_en_proceso' %}" class="btn btn-primary btn-lg btn-block">Ver Pedidos</a>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Agrega más botones según las secciones que desees incluir -->
 </div>
 
 {% endblock content %}

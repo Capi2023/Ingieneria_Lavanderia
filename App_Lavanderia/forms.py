@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.db.models import Q
+from decimal import Decimal
 from .models import *
 
 
@@ -46,12 +47,17 @@ class TipoServicioForm(forms.ModelForm):
 
     class Meta:
         model = TipoServicio
-        fields = ['cantidad_ropa', 'tipo_ropa', 'tipo_servicio', 'detalles_extra']
+        fields = ['cantidad_ropa', 'tipo_ropa', 'tipo_servicio', 'tipo_prenda', 'detalles_extra', 'precio']
+        widgets = {
+            'tipo_prenda': forms.CheckboxSelectMultiple,
+            'cantidad_ropa': forms.NumberInput(attrs={'step': '0.5', 'min': '0'}),
+            'administrador': forms.HiddenInput(),
+        }
 
     def __init__(self, *args, cliente=None, **kwargs):
         super().__init__(*args, **kwargs)
         if cliente:
-            self.fields['cliente'].initial = cliente.user.pk  # Corregido aquí
+            self.fields['cliente'].initial = cliente.user.pk
             self.fields['dir_entrega'].initial = cliente.dir_cliente
 
 
@@ -61,11 +67,14 @@ class TarjetaForm(forms.ModelForm):
         fields = ['nom_titular', 'num_tarjeta', 'fecha_ven_tarjeta', 'nip_tarjeta']
 
 
-from django import forms
-from .models import Pedidos
-
 class PedidoForm(forms.ModelForm):
     class Meta:
         model = Pedidos
-        fields = ['fecha_actual', 'hora', 'sucursal', 'admin', 'rep', 'lavado', 'cliente']
+        fields = ['fecha_actual', 'hora', 'sucursal', 'admin', 'rep', 'servicios', 'cliente', 'pago', 'estado']
+
+
+class PedidoClienteForm(forms.ModelForm):
+    class Meta:
+        model = Pedidos
+        fields = ['servicios']
 

@@ -16,7 +16,8 @@ urlpatterns = [
     path('index/cliente/', views.index_cliente, name='index_cliente'),
     path('miembros/', include('miembros.urls')),
     path('miembros/', include('django.contrib.auth.urls')),
-    path('enviar_pedido/', views.enviar_pedido, name='enviar_pedido'),
+    path('crea_tipos_servicio/', views.crea_tipos_servicio, name='crea_tipos_servicio'),
+    path('juntar_pedidos/', views.juntar_pedidos, name='juntar_pedidos'),
     path('pedido_enviado/', views.pedido_enviado, name='pedido_enviado'),
     path('proceso-pedido/', views.pedidos_en_proceso, name='pedidos_en_proceso'),
     # Administrador

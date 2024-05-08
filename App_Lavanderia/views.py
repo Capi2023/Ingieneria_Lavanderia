@@ -89,22 +89,51 @@ def actualizar_cliente(request, cliente_id):
     return render(request, 'actualizar_cliente.html', {'form': form, 'cliente': cliente})
 
 
-def enviar_pedido(request):
+def crea_tipos_servicio(request):
     cliente = ClienteRegistrado.objects.get(user=request.user)
-    administrador = Administrador.objects.first()  # Obtener el primer administrador
+    administrador = Administrador.objects.first()
     if request.method == 'POST':
         form = TipoServicioForm(request.POST, cliente=cliente)
         if form.is_valid():
-            pedido = form.save(commit=False)
-            pedido.cliente = cliente
-            pedido.dir_entrega = cliente.dir_cliente
-            pedido.administrador = administrador  # Asignar el primer administrador
-            pedido.save()
+            # Añadir el cliente y el administrador al formulario antes de guardarlo
+            form.instance.cliente = cliente
+            form.instance.administrador = administrador
+            form.instance.dir_entrega = cliente.dir_cliente  # Corrección aquí
+            form.save()
             return redirect('index_cliente')
     else:
         form = TipoServicioForm(cliente=cliente)
+    
+    return render(request, 'crea_tipos_servicio.html', {'form': form})
 
-    return render(request, 'enviar_pedido.html', {'form': form})
+
+def juntar_pedidos(request):
+    tipo_servicios_disponibles = TipoServicio.objects.exclude(pedidos__isnull=False)
+    el_estad = EstadoPedido.EN_ESPERA
+    if request.method == 'POST':
+        form = PedidoClienteForm(request.POST)
+        if form.is_valid():
+            servicios_seleccionados = form.cleaned_data['servicios']
+            fecha_actual = datetime.now().date()
+            hora_actual = datetime.now().time()
+            primer_admin = Administrador.objects.first()
+            primer_rep = Repartidor.objects.first()
+            primera_sucursal = Sucursal.objects.first()
+            nuevo_pedido = Pedidos.objects.create(
+                fecha_actual=fecha_actual,
+                hora=hora_actual,
+                sucursal=primera_sucursal,
+                admin=primer_admin,
+                rep=primer_rep,
+                cliente=request.user.clienteregistrado,
+                estado=el_estad,
+            )
+            nuevo_pedido.servicios.set(servicios_seleccionados)
+            nuevo_pedido.save()
+            return redirect('index_cliente')
+    else:
+        form = PedidoClienteForm()
+    return render(request, 'juntar_pedidos.html', {'form': form, 'tipo_servicios': tipo_servicios_disponibles})
 
 
 def pedido_enviado(request):
@@ -112,48 +141,14 @@ def pedido_enviado(request):
 
 
 def ver_pedidos(request):
-    tiposervicios_sin_pedido = TipoServicio.objects.filter(pedidos__isnull=True)
-    tiposervicios_con_pedido = TipoServicio.objects.filter(pedidos__isnull=False)
+    todos_pedidos = Pedidos.objects.all()
     
-    if request.method == 'POST':
-        decision = request.POST.get('decision')
-        tipo_servicio_id = request.POST.get('tipo_servicio_id')
-        
-        if decision == 'aceptar':
-            tipo_servicio = TipoServicio.objects.get(id=tipo_servicio_id)
-            # Obtener el primer registro de Sucursal, Admin y Repartidor
-            primera_sucursal = Sucursal.objects.first()
-            primer_admin = Administrador.objects.first()
-            primer_repartidor = Repartidor.objects.first()
-            
-            # Crear un nuevo pedido
-            nuevo_pedido = Pedidos.objects.create(
-                fecha_actual=timezone.now().date(),
-                hora=timezone.now().time(),
-                cliente=tipo_servicio.cliente,
-                sucursal=primera_sucursal,
-                admin=primer_admin,
-                rep=primer_repartidor,
-                lavado=tipo_servicio,
-            )
-            # Actualizar el estado del tipo de servicio
-            tipo_servicio.estado = 'Aceptado'
-            tipo_servicio.save()
-            # Redirigir a la vista para ver los pedidos
-            return redirect('ver_pedidos')
-        
-        elif decision == 'rechazar':
-            # Eliminar el tipo de servicio
-            TipoServicio.objects.filter(id=tipo_servicio_id).delete()
-            # Redirigir a la vista para ver los pedidos
-            return redirect('ver_pedidos')
-
-    return render(request, 'ver_pedidos.html', {'tiposervicios_sin_pedido': tiposervicios_sin_pedido, 'tiposervicios_con_pedido': tiposervicios_con_pedido})
+    return render(request, 'ver_pedidos.html', {'todos_pedidos': todos_pedidos})
 
 
 def gestionar_pedido(request, pedido_id):
     pedido = Pedidos.objects.get(id=pedido_id)
-    tipo_servicio_form = TipoServicioForm(instance=pedido.lavado)  # Crear una instancia del formulario con el TipoServicio asociado al pedido
+    tipo_servicio_form = TipoServicioForm(instance=pedido.servicios)  # Crear una instancia del formulario con el TipoServicio asociado al pedido
     
     if request.method == 'POST':
         form = PedidoForm(request.POST, instance=pedido)
@@ -218,6 +213,4 @@ def pedidos_en_proceso(request):
     # Obtener los pedidos en proceso del cliente actual
     pedidos_en_proceso = Pedidos.objects.filter(cliente=cliente)
     return render(request, 'proceso_pedido.html', {'pedidos_en_proceso': pedidos_en_proceso})
-
-
 

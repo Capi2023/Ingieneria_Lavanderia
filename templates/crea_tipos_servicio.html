@@ -1,0 +1,71 @@
+{% extends 'base_cliente.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Crear tu tipo de pedido</h1>
+    <form method="post" class="mt-4" id="tipo-servicio-form">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_cantidad_ropa" class="form-label">Cantidad de Ropa:</label>
+            {{ form.cantidad_ropa }}
+        </div>
+        <div class="mb-3">
+            <label for="id_tipo_ropa" class="form-label">Tipo de Ropa:</label>
+            {{ form.tipo_ropa }}
+        </div>
+        <div class="mb-3">
+            <label for="id_tipo_servicio" class="form-label">Tipo de Servicio:</label>
+            {{ form.tipo_servicio }}
+        </div>
+        <div class="mb-3">
+            <label for="id_tipo_prenda" class="form-label">Tipo de Prendas en el canasto:</label>
+            {{ form.tipo_prenda }}
+        </div>
+        <div class="mb-3">
+            <label for="id_detalles_extra" class="form-label">Detalles Extras:</label>
+            {{ form.detalles_extra }}
+        </div>
+        <div class="mb-3">
+            <label for="id_precio" class="form-label">Precio estimado:</label>
+            <input type="text" id="id_precio" name="precio" value="{{ form.instance.precio }}" readonly>
+        </div>
+        <input type="hidden" name="cliente" value="{{ form.cliente.initial }}">
+        <input type="hidden" name="dir_entrega" value="{{ form.dir_entrega.initial }}">
+        <button type="submit" class="btn btn-primary">Guardar tipo de servicio</button>
+        <a href="{% url 'index_cliente' %}" class="btn btn-danger">Cancelar</a>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cantidadRopaInput = document.querySelector('#id_cantidad_ropa');
+        const precioInput = document.querySelector('#id_precio');
+        const tipoServicioInput = document.querySelector('#id_tipo_servicio');
+
+        cantidadRopaInput.addEventListener('input', function() {
+            actualizarPrecio();
+        });
+
+        tipoServicioInput.addEventListener('change', function() {
+            actualizarPrecio();
+        });
+
+        function actualizarPrecio() {
+            const cantidadRopa = parseFloat(cantidadRopaInput.value);
+            const tipoServicio = tipoServicioInput.value;
+
+            if (!isNaN(cantidadRopa)) {
+                let precioBase = Math.floor(cantidadRopa / 0.5) * 50;
+
+                if (tipoServicio === 'A vapor') {
+                    precioBase *= 1.5; // Aumento del 50%
+                } else if (tipoServicio === 'En seco') {
+                    precioBase *= 2; // Aumento del 100%
+                }
+
+                precioInput.value = precioBase.toFixed(2); // Redondear a 2 decimales
+            }
+        }
+    });
+</script>
+{% endblock content %}
+

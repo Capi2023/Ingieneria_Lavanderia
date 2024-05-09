@@ -74,6 +74,12 @@ class PedidoForm(forms.ModelForm):
 
 
 class PedidoClienteForm(forms.ModelForm):
+    servicios = forms.ModelMultipleChoiceField(
+        queryset=TipoServicio.objects.exclude(pedidos__isnull=False),
+        widget=forms.CheckboxSelectMultiple,
+        required=True
+    )
+
     class Meta:
         model = Pedidos
         fields = ['servicios']

@@ -73,6 +73,8 @@ class TipoPrenda(models.Model):
 class EstadoPedido(models.TextChoices):
     EN_ESPERA = 'EN_ESPERA', 'En espera'
     ACEPTADO = 'ACEPTADO', 'Aceptado'
+    TERMINADO = 'TERMINADO', 'Terminado'
+    RECHAZADO = 'RECHAZADO', 'Rechazado'
 
 
 class Ruta(models.Model):

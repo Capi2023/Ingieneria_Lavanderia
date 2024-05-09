@@ -131,6 +131,8 @@ def juntar_pedidos(request):
             nuevo_pedido.servicios.set(servicios_seleccionados)
             nuevo_pedido.save()
             return redirect('index_cliente')
+        else:
+            print(form.errors)  # Imprime errores del formulario
     else:
         form = PedidoClienteForm()
     return render(request, 'juntar_pedidos.html', {'form': form, 'tipo_servicios': tipo_servicios_disponibles})
@@ -141,9 +143,24 @@ def pedido_enviado(request):
 
 
 def ver_pedidos(request):
-    todos_pedidos = Pedidos.objects.all()
+    pedidos_en_espera = Pedidos.objects.filter(estado=EstadoPedido.EN_ESPERA)
+    pedidos_aceptados = Pedidos.objects.filter(estado=EstadoPedido.ACEPTADO)
+    pedidos_terminados = Pedidos.objects.filter(estado=EstadoPedido.TERMINADO)
+    pedidos_rechazados = Pedidos.objects.filter(estado=EstadoPedido.RECHAZADO)
     
-    return render(request, 'ver_pedidos.html', {'todos_pedidos': todos_pedidos})
+    return render(request, 'ver_pedidos.html', {
+        'pedidos_en_espera': pedidos_en_espera,
+        'pedidos_aceptados': pedidos_aceptados,
+        'pedidos_terminados': pedidos_terminados,
+        'pedidos_rechazados': pedidos_rechazados
+    })
+
+
+def cambiar_estado_pedido(request, pedido_id, nuevo_estado):
+    pedido = get_object_or_404(Pedidos, id=pedido_id)
+    pedido.estado = nuevo_estado
+    pedido.save()
+    return redirect('ver_pedidos')
 
 
 def gestionar_pedido(request, pedido_id):
@@ -210,7 +227,16 @@ def editar_tarjeta(request, tarjeta_id):
 def pedidos_en_proceso(request):
     # Obtener el cliente actual
     cliente = request.user.clienteregistrado
-    # Obtener los pedidos en proceso del cliente actual
-    pedidos_en_proceso = Pedidos.objects.filter(cliente=cliente)
-    return render(request, 'proceso_pedido.html', {'pedidos_en_proceso': pedidos_en_proceso})
+    # Obtener los pedidos según su estado
+    pedidos_en_espera = Pedidos.objects.filter(cliente=cliente, estado=EstadoPedido.EN_ESPERA)
+    pedidos_aceptados = Pedidos.objects.filter(cliente=cliente, estado=EstadoPedido.ACEPTADO)
+    pedidos_terminados = Pedidos.objects.filter(cliente=cliente, estado=EstadoPedido.TERMINADO)
+    pedidos_rechazados = Pedidos.objects.filter(cliente=cliente, estado=EstadoPedido.RECHAZADO)
+    
+    return render(request, 'proceso_pedido.html', {
+        'pedidos_en_espera': pedidos_en_espera,
+        'pedidos_aceptados': pedidos_aceptados,
+        'pedidos_terminados': pedidos_terminados,
+        'pedidos_rechazados': pedidos_rechazados
+    })
 

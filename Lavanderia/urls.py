@@ -30,4 +30,5 @@ urlpatterns = [
     path('ver-usuarios/', views.ver_usuarios, name='ver_usuarios'),
     path('ver_pedidos/', views.ver_pedidos, name='ver_pedidos'),
     path('gestionar_pedido/<int:pedido_id>/', views.gestionar_pedido, name='gestionar_pedido'),
+    path('cambiar_estado_pedido/<int:pedido_id>/<str:nuevo_estado>/', views.cambiar_estado_pedido, name='cambiar_estado_pedido'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

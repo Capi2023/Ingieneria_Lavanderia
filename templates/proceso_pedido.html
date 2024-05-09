@@ -1,28 +1,171 @@
-<!-- proceso_pedido.html -->
 {% extends 'base_cliente.html' %}
 
 {% block content %}
 <div class="container mt-5">
     <h1 class="mb-4">Tus pedidos en proceso</h1>
-    {% if pedidos_en_proceso %}
+    
+    <h2>Pedidos en Espera</h2>
+    {% if pedidos_en_espera %}
     <div class="row">
-        {% for pedido in pedidos_en_proceso %}
+        {% for pedido in pedidos_en_espera %}
         <div class="col-md-6">
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
                     <p class="card-text">Fecha: {{ pedido.fecha_actual }}</p>
                     <p class="card-text">Hora: {{ pedido.hora }}</p>
-                    <p class="card-text">Tipo: {{ pedido.lavado }}</p>
-                    <!-- Agrega más información del pedido si es necesario -->
+                    <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
+                    <p class="card-text">Servicios:</p>
+                    <ul>
+                        {% for servicio in pedido.servicios.all %}
+                        <li>
+                            <p><strong>Tipo de Servicio:</strong> {{ servicio.get_tipo_servicio_display }}</p>
+                            <p><strong>Cantidad de Ropa:</strong> {{ servicio.cantidad_ropa }}</p>
+                            <p><strong>Tipo de Ropa:</strong> {{ servicio.get_tipo_ropa_display }}</p>
+                            <p><strong>Prendas:</strong>
+                                <ul>
+                                    {% for prenda in servicio.tipo_prenda.all %}
+                                    <li>{{ prenda.nombre }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </p>
+                            <p><strong>Detalles Extras:</strong> {{ servicio.detalles_extra }}</p>
+                            <p><strong>Dirección de Entrega:</strong> {{ servicio.dir_entrega }}</p>
+                            <p><strong>Precio:</strong> {{ servicio.precio }}</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
     {% else %}
-    <p>No hay pedidos en proceso.</p>
+    <p>No hay pedidos en espera.</p>
     {% endif %}
+    
+    <h2>Pedidos Aceptados</h2>
+    {% if pedidos_aceptados %}
+    <div class="row">
+        {% for pedido in pedidos_aceptados %}
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
+                    <p class="card-text">Fecha: {{ pedido.fecha_actual }}</p>
+                    <p class="card-text">Hora: {{ pedido.hora }}</p>
+                    <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
+                    <p class="card-text">Servicios:</p>
+                    <ul>
+                        {% for servicio in pedido.servicios.all %}
+                        <li>
+                            <p><strong>Tipo de Servicio:</strong> {{ servicio.get_tipo_servicio_display }}</p>
+                            <p><strong>Cantidad de Ropa:</strong> {{ servicio.cantidad_ropa }}</p>
+                            <p><strong>Tipo de Ropa:</strong> {{ servicio.get_tipo_ropa_display }}</p>
+                            <p><strong>Prendas:</strong>
+                                <ul>
+                                    {% for prenda in servicio.tipo_prenda.all %}
+                                    <li>{{ prenda.nombre }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </p>
+                            <p><strong>Detalles Extras:</strong> {{ servicio.detalles_extra }}</p>
+                            <p><strong>Dirección de Entrega:</strong> {{ servicio.dir_entrega }}</p>
+                            <p><strong>Precio:</strong> {{ servicio.precio }}</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No hay pedidos aceptados.</p>
+    {% endif %}
+    
+    <h2>Pedidos Terminados</h2>
+    {% if pedidos_terminados %}
+    <div class="row">
+        {% for pedido in pedidos_terminados %}
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
+                    <p class="card-text">Fecha: {{ pedido.fecha_actual }}</p>
+                    <p class="card-text">Hora: {{ pedido.hora }}</p>
+                    <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
+                    <p class="card-text">Servicios:</p>
+                    <ul>
+                        {% for servicio in pedido.servicios.all %}
+                        <li>
+                            <p><strong>Tipo de Servicio:</strong> {{ servicio.get_tipo_servicio_display }}</p>
+                            <p><strong>Cantidad de Ropa:</strong> {{ servicio.cantidad_ropa }}</p>
+                            <p><strong>Tipo de Ropa:</strong> {{ servicio.get_tipo_ropa_display }}</p>
+                            <p><strong>Prendas:</strong>
+                                <ul>
+                                    {% for prenda in servicio.tipo_prenda.all %}
+                                    <li>{{ prenda.nombre }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </p>
+                            <p><strong>Detalles Extras:</strong> {{ servicio.detalles_extra }}</p>
+                            <p><strong>Dirección de Entrega:</strong> {{ servicio.dir_entrega }}</p>
+                            <p><strong>Precio:</strong> {{ servicio.precio }}</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No hay pedidos terminados.</p>
+    {% endif %}
+    
+    <h2>Pedidos Rechazados</h2>
+    {% if pedidos_rechazados %}
+    <div class="row">
+        {% for pedido in pedidos_rechazados %}
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
+                    <p class="card-text">Fecha: {{ pedido.fecha_actual }}</p>
+                    <p class="card-text">Hora: {{ pedido.hora }}</p>
+                    <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
+                    <p class="card-text">Servicios:</p>
+                    <ul>
+                        {% for servicio in pedido.servicios.all %}
+                        <li>
+                            <p><strong>Tipo de Servicio:</strong> {{ servicio.get_tipo_servicio_display }}</p>
+                            <p><strong>Cantidad de Ropa:</strong> {{ servicio.cantidad_ropa }}</p>
+                            <p><strong>Tipo de Ropa:</strong> {{ servicio.get_tipo_ropa_display }}</p>
+                            <p><strong>Prendas:</strong>
+                                <ul>
+                                    {% for prenda in servicio.tipo_prenda.all %}
+                                    <li>{{ prenda.nombre }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </p>
+                            <p><strong>Detalles Extras:</strong> {{ servicio.detalles_extra }}</p>
+                            <p><strong>Dirección de Entrega:</strong> {{ servicio.dir_entrega }}</p>
+                            <p><strong>Precio:</strong> {{ servicio.precio }}</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No hay pedidos rechazados.</p>
+    {% endif %}
+    
     <a href="{% url 'index_cliente' %}" class="btn btn-danger">Salir</a>
 </div>
 {% endblock %}
+
+

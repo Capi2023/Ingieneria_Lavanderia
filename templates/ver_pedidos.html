@@ -5,7 +5,7 @@
     
     <!-- Pedidos en espera -->
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <h2 class="mb-3">Pedidos en espera</h2>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -15,30 +15,38 @@
                             <th>Fecha</th>
                             <th>Hora</th>
                             <th>Cliente</th>
-                            <!-- Agrega más columnas según los datos que quieras mostrar -->
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for pedido in todos_pedidos %}
-                            {% if pedido.estado == 'EN_ESPERA' %}
-                            <tr>
-                                <td>{{ pedido.id }}</td>
-                                <td>{{ pedido.fecha_actual }}</td>
-                                <td>{{ pedido.hora }}</td>
-                                <td>{{ pedido.cliente }}</td>
-                                <!-- Agrega más celdas según los datos que quieras mostrar -->
-                            </tr>
-                            {% endif %}
+                        {% for pedido in pedidos_en_espera %}
+                        <tr>
+                            <td>{{ pedido.id }}</td>
+                            <td>{{ pedido.fecha_actual }}</td>
+                            <td>{{ pedido.hora }}</td>
+                            <td>{{ pedido.cliente }}</td>
+                            <td>
+                                <form method="post" action="{% url 'cambiar_estado_pedido' pedido.id 'ACEPTADO' %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('¿Estás seguro de que deseas aceptar este pedido?');">Aceptar</button>
+                                </form>
+                                <form method="post" action="{% url 'cambiar_estado_pedido' pedido.id 'RECHAZADO' %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas rechazar este pedido?');">Rechazar</button>
+                                </form>
+                                <a href="{% url 'gestionar_pedido' pedido.id %}" class="btn btn-primary">Gestionar</a>
+                            </td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    
+
     <!-- Pedidos aceptados -->
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <h2 class="mb-3">Pedidos aceptados</h2>
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -48,26 +56,89 @@
                             <th>Fecha</th>
                             <th>Hora</th>
                             <th>Cliente</th>
-                            <!-- Agrega más columnas según los datos que quieras mostrar -->
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for pedido in todos_pedidos %}
-                        {% if pedido.estado == 'ACEPTADO' %}
+                        {% for pedido in pedidos_aceptados %}
                         <tr>
                             <td>{{ pedido.id }}</td>
                             <td>{{ pedido.fecha_actual }}</td>
                             <td>{{ pedido.hora }}</td>
                             <td>{{ pedido.cliente }}</td>
-                            <!-- Agrega más celdas según los datos que quieras mostrar -->
+                            <td>
+                                <form method="post" action="{% url 'cambiar_estado_pedido' pedido.id 'TERMINADO' %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('¿Estás seguro de que deseas marcar este pedido como terminado?');">Terminar</button>
+                                </form>
+                                <a href="{% url 'gestionar_pedido' pedido.id %}" class="btn btn-primary">Gestionar</a>
+                            </td>
                         </tr>
-                        {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    
+
+    <!-- Pedidos terminados -->
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-3">Pedidos terminados</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Cliente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pedido in pedidos_terminados %}
+                        <tr>
+                            <td>{{ pedido.id }}</td>
+                            <td>{{ pedido.fecha_actual }}</td>
+                            <td>{{ pedido.hora }}</td>
+                            <td>{{ pedido.cliente }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pedidos rechazados -->
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb3">Pedidos rechazados</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Cliente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pedido in pedidos_rechazados %}
+                        <tr>
+                            <td>{{ pedido.id }}</td>
+                            <td>{{ pedido.fecha_actual }}</td>
+                            <td>{{ pedido.hora }}</td>
+                            <td>{{ pedido.cliente }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
 {% endblock %}
+

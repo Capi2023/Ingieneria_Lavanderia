@@ -1,40 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container mt-5">
-    <h1 class="mb-4">Gestionar Pedido</h1>
+    <h1 class="mb-4">Gestionar Pedido #{{ pedido.id }}</h1>
     
     <div class="card mb-4">
         <div class="card-header">
             <h2 class="card-title">Detalles del Tipo de Servicio</h2>
         </div>
         <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group row">
-                    <label for="id_cantidad_ropa" class="col-sm-4 col-form-label">Cantidad de Ropa:</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="id_cantidad_ropa" value="{{ tipo_servicio_form.instance.cantidad_ropa }}" readonly>
-                    </div>
+            {% for servicio in pedido.servicios.all %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p><strong>Tipo de Servicio:</strong> {{ servicio.get_tipo_servicio_display }}</p>
+                    <p><strong>Cantidad de Ropa:</strong> {{ servicio.cantidad_ropa }}</p>
+                    <p><strong>Tipo de Ropa:</strong> {{ servicio.get_tipo_ropa_display }}</p>
+                    <p><strong>Prendas:</strong>
+                        <ul>
+                            {% for prenda in servicio.tipo_prenda.all %}
+                            <li>{{ prenda.nombre }}</li>
+                            {% endfor %}
+                        </ul>
+                    </p>
+                    <p><strong>Detalles Extras:</strong> {{ servicio.detalles_extra }}</p>
+                    <p><strong>Dirección de Entrega:</strong> {{ servicio.dir_entrega }}</p>
+                    <p><strong>Precio:</strong> {{ servicio.precio }}</p>
                 </div>
-                <div class="form-group row">
-                    <label for="id_tipo_ropa" class="col-sm-4 col-form-label">Tipo de Ropa:</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="id_tipo_ropa" value="{{ tipo_servicio_form.instance.tipo_ropa }}" readonly>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="id_detalles_extra" class="col-sm-4 col-form-label">Detalles Extra:</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="id_detalles_extra" value="{{ tipo_servicio_form.instance.detalles_extra }}" readonly>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="id_dir_entrega" class="col-sm-4 col-form-label">Dirección de Entrega:</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="id_dir_entrega" value="{{ tipo_servicio_form.instance.dir_entrega }}" readonly>
-                    </div>
-                </div>
-            </form>
+            </div>
+            {% endfor %}
         </div>
     </div>
     

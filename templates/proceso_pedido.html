@@ -75,6 +75,9 @@
                         </li>
                         {% endfor %}
                     </ul>
+                    {% if not pedido.pago %}
+                    <a href="{% url 'realizar_pago_cliente' pedido.id %}" class="btn btn-secondary">Realizar Pago</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -115,6 +118,9 @@
                         </li>
                         {% endfor %}
                     </ul>
+                    {% if not pedido.pago %}
+                    <a href="{% url 'realizar_pago_cliente' pedido.id %}" class="btn btn-secondary">Realizar Pago</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -167,5 +173,3 @@
     <a href="{% url 'index_cliente' %}" class="btn btn-danger">Salir</a>
 </div>
 {% endblock %}
-
-

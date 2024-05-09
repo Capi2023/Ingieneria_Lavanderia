@@ -70,7 +70,7 @@ class TarjetaForm(forms.ModelForm):
 class PedidoForm(forms.ModelForm):
     class Meta:
         model = Pedidos
-        fields = ['fecha_actual', 'hora', 'sucursal', 'admin', 'rep', 'servicios', 'cliente', 'pago', 'estado']
+        fields = ['fecha_actual', 'hora', 'sucursal', 'admin', 'rep', 'cliente', 'pago', 'estado']
 
 
 class PedidoClienteForm(forms.ModelForm):
@@ -83,4 +83,13 @@ class PedidoClienteForm(forms.ModelForm):
     class Meta:
         model = Pedidos
         fields = ['servicios']
+
+
+class PagoForm(forms.ModelForm):
+    class Meta:
+        model = Pago
+        fields = ['metodo_pago']
+        widgets = {
+            'metodo_pago': forms.Select(choices=[('Tarjeta de Crédito', 'Tarjeta de Crédito'), ('PayPal', 'PayPal')])
+        }
 

@@ -19,7 +19,8 @@ urlpatterns = [
     path('crea_tipos_servicio/', views.crea_tipos_servicio, name='crea_tipos_servicio'),
     path('juntar_pedidos/', views.juntar_pedidos, name='juntar_pedidos'),
     path('pedido_enviado/', views.pedido_enviado, name='pedido_enviado'),
-    path('proceso-pedido/', views.pedidos_en_proceso, name='pedidos_en_proceso'),
+    path('pedidos_en_proceso/', views.pedidos_en_proceso, name='pedidos_en_proceso'),
+    path('realizar_pago_cliente/<int:pedido_id>/', views.realizar_pago_cliente, name='realizar_pago_cliente'),
     # Administrador
     path('crear_usuario/', views.crear_usuario, name='crear_usuario'),
     path('crear_cliente/', views.crear_cliente, name='crear_cliente'),
@@ -31,4 +32,5 @@ urlpatterns = [
     path('ver_pedidos/', views.ver_pedidos, name='ver_pedidos'),
     path('gestionar_pedido/<int:pedido_id>/', views.gestionar_pedido, name='gestionar_pedido'),
     path('cambiar_estado_pedido/<int:pedido_id>/<str:nuevo_estado>/', views.cambiar_estado_pedido, name='cambiar_estado_pedido'),
+    path('realizar_pago/<int:pedido_id>/', views.realizar_pago, name='realizar_pago'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
+import datetime
 
 
 class Tarjeta(models.Model):
@@ -190,12 +191,12 @@ class Sucursal(models.Model):
 
 
 class Pago(models.Model):
-    nom_pago = models.CharField(max_length=100)
     cliente = models.ForeignKey(ClienteRegistrado, on_delete=models.CASCADE)
-    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
-    tarjeta = models.ForeignKey(Tarjeta, on_delete=models.CASCADE)
-    lavado = models.ForeignKey(Pedidos, on_delete=models.CASCADE, related_name='pagos')
+    pedido = models.OneToOneField(Pedidos, on_delete=models.CASCADE, related_name='pago_detalle', null=True)
+    fecha_pago = models.DateTimeField(default=datetime.datetime.now)
+    monto = models.DecimalField(max_digits=8, decimal_places=2, default=0.0)
+    metodo_pago = models.CharField(max_length=50, default='Tarjeta de Crédito')
 
     def __str__(self):
-        return self.nom_pago
+        return f"Pago de {self.monto} por {self.cliente.user.username} para el pedido {self.pedido.id if self.pedido else 'No asignado'}"
 

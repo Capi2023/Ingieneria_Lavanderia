@@ -25,26 +25,25 @@ def login_user(request):
 
 
 def logout_user(request):
-	logout(request)
-	messages.success(request, ("Estas fuera!"))
-	return redirect('landing')
+    logout(request)
+    messages.success(request, ("Estas fuera!"))
+    return redirect('landing')
 
 
 def register_user(request):
-	if request.method == "POST":
-		form = RegisterUserForm(request.POST)
-		if form.is_valid():
-			form.save()
-			username = form.cleaned_data['username']
-			password = form.cleaned_data['password1']
-			user = authenticate(username=username, password=password)
-			login(request, user)
-			messages.success(request, ("Se registro correctamente!"))
-			return redirect('landing')
-	else:
-		form = RegisterUserForm()
+    if request.method == "POST":
+        form = RegisterUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            messages.success(request, ("Se registro correctamente!"))
+            return redirect('landing')
+    else:
+        form = RegisterUserForm()
 
-	return render(request, 'authenticate/register_user.html', {
-		'form':form,
-		})
+    return render(request, 'authenticate/register_user.html', {'form': form})
+
 

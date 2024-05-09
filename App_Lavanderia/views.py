@@ -32,7 +32,9 @@ def crear_usuario(request):
     if request.method == 'POST':
         form = UsuarioForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])  # Asegúrate de establecer la contraseña correctamente
+            user.save()
             return redirect('ver_usuarios')  # Redirige a la vista de ver clientes
     else:
         form = UsuarioForm()
@@ -44,7 +46,7 @@ def crear_cliente(request):
         form = ClienteForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('ver_clientes')  # Redirige a la vista de ver clientes
+            return redirect('ver_usuarios')  # Redirige a la vista de ver clientes
     else:
         form = ClienteForm()
     return render(request, 'crear_cliente.html', {'form': form})
@@ -55,7 +57,7 @@ def crear_repartidor(request):
         form = RepartidorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('crear_repartidor')
+            return redirect('ver_usuarios')  # Redirige a la vista de ver usuarios
     else:
         form = RepartidorForm()
     return render(request, 'crear_repartidor.html', {'form': form})
@@ -164,8 +166,7 @@ def cambiar_estado_pedido(request, pedido_id, nuevo_estado):
 
 
 def gestionar_pedido(request, pedido_id):
-    pedido = Pedidos.objects.get(id=pedido_id)
-    tipo_servicio_form = TipoServicioForm(instance=pedido.servicios)  # Crear una instancia del formulario con el TipoServicio asociado al pedido
+    pedido = get_object_or_404(Pedidos, id=pedido_id)
     
     if request.method == 'POST':
         form = PedidoForm(request.POST, instance=pedido)
@@ -175,11 +176,17 @@ def gestionar_pedido(request, pedido_id):
     else:
         form = PedidoForm(instance=pedido)
     
-    return render(request, 'gestionar_pedido.html', {'form': form, 'tipo_servicio_form': tipo_servicio_form})
+    return render(request, 'gestionar_pedido.html', {'form': form, 'pedido': pedido})
 
 
+@login_required
 def perfil(request):
-    cliente = ClienteRegistrado.objects.get(user=request.user)
+    try:
+        cliente = ClienteRegistrado.objects.get(user=request.user)
+    except ClienteRegistrado.DoesNotExist:
+        # Redirige al usuario a una página para completar su perfil, o muestra un mensaje de error
+        return redirect('crear_perfil')  # Suponiendo que tienes una vista para crear el perfil del cliente
+
     return render(request, 'perfil.html', {'cliente': cliente})
 
 
@@ -224,10 +231,9 @@ def editar_tarjeta(request, tarjeta_id):
     return render(request, 'editar_tarjeta.html', {'form': form})
 
 
+@login_required
 def pedidos_en_proceso(request):
-    # Obtener el cliente actual
     cliente = request.user.clienteregistrado
-    # Obtener los pedidos según su estado
     pedidos_en_espera = Pedidos.objects.filter(cliente=cliente, estado=EstadoPedido.EN_ESPERA)
     pedidos_aceptados = Pedidos.objects.filter(cliente=cliente, estado=EstadoPedido.ACEPTADO)
     pedidos_terminados = Pedidos.objects.filter(cliente=cliente, estado=EstadoPedido.TERMINADO)
@@ -239,4 +245,46 @@ def pedidos_en_proceso(request):
         'pedidos_terminados': pedidos_terminados,
         'pedidos_rechazados': pedidos_rechazados
     })
+
+
+@login_required
+def realizar_pago_cliente(request, pedido_id):
+    pedido = get_object_or_404(Pedidos, id=pedido_id, cliente=request.user.clienteregistrado)
+
+    if request.method == 'POST':
+        form = PagoForm(request.POST)
+        if form.is_valid():
+            pago = form.save(commit=False)
+            pago.pedido = pedido
+            pago.cliente = request.user.clienteregistrado
+            pago.monto = pedido.calcular_precio_aproximado()
+            pago.save()
+            pedido.estado = EstadoPedido.TERMINADO  # Asumiendo que el pago cambia el estado a terminado
+            pedido.save()
+            return redirect('pedidos_en_proceso')
+    else:
+        form = PagoForm()
+
+    return render(request, 'realizar_pago_cliente.html', {'form': form, 'pedido': pedido})
+
+
+@login_required
+def realizar_pago(request, pedido_id):
+    pedido = get_object_or_404(Pedidos, id=pedido_id)
+
+    if request.method == 'POST':
+        form = PagoForm(request.POST)
+        if form.is_valid():
+            pago = form.save(commit=False)
+            pago.pedido = pedido
+            pago.cliente = request.user.clienteregistrado
+            pago.monto = pedido.calcular_precio_aproximado()  # Asumiendo que tienes este método en el modelo Pedido
+            pago.save()
+            pedido.estado = 'PAGADO'  # Actualiza el estado del pedido
+            pedido.save()
+            return redirect('ver_pedidos')  # Redirige a la vista de pedidos
+    else:
+        form = PagoForm()
+
+    return render(request, 'realizar_pago.html', {'form': form, 'pedido': pedido})
 

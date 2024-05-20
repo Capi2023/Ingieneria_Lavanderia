@@ -16,8 +16,9 @@ urlpatterns = [
     path('index/cliente/', views.index_cliente, name='index_cliente'),
     path('miembros/', include('miembros.urls')),
     path('miembros/', include('django.contrib.auth.urls')),
-    path('crea_tipos_servicio/', views.crea_tipos_servicio, name='crea_tipos_servicio'),
-    path('juntar_pedidos/', views.juntar_pedidos, name='juntar_pedidos'),
+    path('pedidos/', views.listar_pedidos, name='listar_pedidos'),
+    path('pedido/nuevo/', views.crear_pedido, name='crear_pedido'),
+    path('pedido/editar/<int:pedido_id>/', views.editar_pedido, name='editar_pedido'),
     path('pedido_enviado/', views.pedido_enviado, name='pedido_enviado'),
     path('pedidos_en_proceso/', views.pedidos_en_proceso, name='pedidos_en_proceso'),
     path('realizar_pago_cliente/<int:pedido_id>/', views.realizar_pago_cliente, name='realizar_pago_cliente'),
@@ -34,3 +35,4 @@ urlpatterns = [
     path('cambiar_estado_pedido/<int:pedido_id>/<str:nuevo_estado>/', views.cambiar_estado_pedido, name='cambiar_estado_pedido'),
     path('realizar_pago/<int:pedido_id>/', views.realizar_pago, name='realizar_pago'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

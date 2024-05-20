@@ -1,5 +1,4 @@
 {% extends 'base_cliente.html' %}
-
 {% block content %}
 <div class="container mt-5">
     <h1 class="mb-4">Tus pedidos en proceso</h1>
@@ -17,21 +16,13 @@
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
                     <p class="card-text">Servicios:</p>
                     <ul>
-                        {% for servicio in pedido.servicios.all %}
+                        {% for prenda in pedido.prendaspedido_set.all %}
                         <li>
-                            <p><strong>Tipo de Servicio:</strong> {{ servicio.get_tipo_servicio_display }}</p>
-                            <p><strong>Cantidad de Ropa:</strong> {{ servicio.cantidad_ropa }}</p>
-                            <p><strong>Tipo de Ropa:</strong> {{ servicio.get_tipo_ropa_display }}</p>
-                            <p><strong>Prendas:</strong>
-                                <ul>
-                                    {% for prenda in servicio.tipo_prenda.all %}
-                                    <li>{{ prenda.nombre }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </p>
-                            <p><strong>Detalles Extras:</strong> {{ servicio.detalles_extra }}</p>
-                            <p><strong>Dirección de Entrega:</strong> {{ servicio.dir_entrega }}</p>
-                            <p><strong>Precio:</strong> {{ servicio.precio }}</p>
+                            <p><strong>Tipo de Prenda:</strong> {{ prenda.tipo_prenda.nombre }}</p>
+                            <p><strong>Tipo de Servicio:</strong> {{ prenda.tipo_servicio.get_tipo_servicio_display }}</p>
+                            <p><strong>Cantidad:</strong> {{ prenda.cantidad }}</p>
+                            <p><strong>Precio Unitario:</strong> {{ prenda.precio_unitario }}</p>
+                            <p><strong>Precio Total:</strong> {{ prenda.precio_total }}</p>
                         </li>
                         {% endfor %}
                     </ul>
@@ -57,26 +48,20 @@
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
                     <p class="card-text">Servicios:</p>
                     <ul>
-                        {% for servicio in pedido.servicios.all %}
+                        {% for prenda in pedido.prendaspedido_set.all %}
                         <li>
-                            <p><strong>Tipo de Servicio:</strong> {{ servicio.get_tipo_servicio_display }}</p>
-                            <p><strong>Cantidad de Ropa:</strong> {{ servicio.cantidad_ropa }}</p>
-                            <p><strong>Tipo de Ropa:</strong> {{ servicio.get_tipo_ropa_display }}</p>
-                            <p><strong>Prendas:</strong>
-                                <ul>
-                                    {% for prenda in servicio.tipo_prenda.all %}
-                                    <li>{{ prenda.nombre }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </p>
-                            <p><strong>Detalles Extras:</strong> {{ servicio.detalles_extra }}</p>
-                            <p><strong>Dirección de Entrega:</strong> {{ servicio.dir_entrega }}</p>
-                            <p><strong>Precio:</strong> {{ servicio.precio }}</p>
+                            <p><strong>Tipo de Prenda:</strong> {{ prenda.tipo_prenda.nombre }}</p>
+                            <p><strong>Tipo de Servicio:</strong> {{ prenda.tipo_servicio.get_tipo_servicio_display }}</p>
+                            <p><strong>Cantidad:</strong> {{ prenda.cantidad }}</p>
+                            <p><strong>Precio Unitario:</strong> {{ prenda.precio_unitario }}</p>
+                            <p><strong>Precio Total:</strong> {{ prenda.precio_total }}</p>
                         </li>
                         {% endfor %}
                     </ul>
                     {% if not pedido.pago %}
-                    <a href="{% url 'realizar_pago_cliente' pedido.id %}" class="btn btn-secondary">Realizar Pago</a>
+                    <a href="{% url 'realizar_pago_cliente' pedido.id %}" class="btn btn-primary">Pagar</a>
+                    {% else %}
+                    <p class="text-success">Pagado</p>
                     {% endif %}
                 </div>
             </div>
@@ -100,26 +85,20 @@
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
                     <p class="card-text">Servicios:</p>
                     <ul>
-                        {% for servicio in pedido.servicios.all %}
+                        {% for prenda in pedido.prendaspedido_set.all %}
                         <li>
-                            <p><strong>Tipo de Servicio:</strong> {{ servicio.get_tipo_servicio_display }}</p>
-                            <p><strong>Cantidad de Ropa:</strong> {{ servicio.cantidad_ropa }}</p>
-                            <p><strong>Tipo de Ropa:</strong> {{ servicio.get_tipo_ropa_display }}</p>
-                            <p><strong>Prendas:</strong>
-                                <ul>
-                                    {% for prenda in servicio.tipo_prenda.all %}
-                                    <li>{{ prenda.nombre }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </p>
-                            <p><strong>Detalles Extras:</strong> {{ servicio.detalles_extra }}</p>
-                            <p><strong>Dirección de Entrega:</strong> {{ servicio.dir_entrega }}</p>
-                            <p><strong>Precio:</strong> {{ servicio.precio }}</p>
+                            <p><strong>Tipo de Prenda:</strong> {{ prenda.tipo_prenda.nombre }}</p>
+                            <p><strong>Tipo de Servicio:</strong> {{ prenda.tipo_servicio.get_tipo_servicio_display }}</p>
+                            <p><strong>Cantidad:</strong> {{ prenda.cantidad }}</p>
+                            <p><strong>Precio Unitario:</strong> {{ prenda.precio_unitario }}</p>
+                            <p><strong>Precio Total:</strong> {{ prenda.precio_total }}</p>
                         </li>
                         {% endfor %}
                     </ul>
                     {% if not pedido.pago %}
-                    <a href="{% url 'realizar_pago_cliente' pedido.id %}" class="btn btn-secondary">Realizar Pago</a>
+                    <a href="{% url 'realizar_pago_cliente' pedido.id %}" class="btn btn-primary">Pagar</a>
+                    {% else %}
+                    <p class="text-success">Pagado</p>
                     {% endif %}
                 </div>
             </div>
@@ -143,21 +122,13 @@
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
                     <p class="card-text">Servicios:</p>
                     <ul>
-                        {% for servicio in pedido.servicios.all %}
+                        {% for prenda in pedido.prendaspedido_set.all %}
                         <li>
-                            <p><strong>Tipo de Servicio:</strong> {{ servicio.get_tipo_servicio_display }}</p>
-                            <p><strong>Cantidad de Ropa:</strong> {{ servicio.cantidad_ropa }}</p>
-                            <p><strong>Tipo de Ropa:</strong> {{ servicio.get_tipo_ropa_display }}</p>
-                            <p><strong>Prendas:</strong>
-                                <ul>
-                                    {% for prenda in servicio.tipo_prenda.all %}
-                                    <li>{{ prenda.nombre }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </p>
-                            <p><strong>Detalles Extras:</strong> {{ servicio.detalles_extra }}</p>
-                            <p><strong>Dirección de Entrega:</strong> {{ servicio.dir_entrega }}</p>
-                            <p><strong>Precio:</strong> {{ servicio.precio }}</p>
+                            <p><strong>Tipo de Prenda:</strong> {{ prenda.tipo_prenda.nombre }}</p>
+                            <p><strong>Tipo de Servicio:</strong> {{ prenda.tipo_servicio.get_tipo_servicio_display }}</p>
+                            <p><strong>Cantidad:</strong> {{ prenda.cantidad }}</p>
+                            <p><strong>Precio Unitario:</strong> {{ prenda.precio_unitario }}</p>
+                            <p><strong>Precio Total:</strong> {{ prenda.precio_total }}</p>
                         </li>
                         {% endfor %}
                     </ul>
@@ -173,3 +144,4 @@
     <a href="{% url 'index_cliente' %}" class="btn btn-danger">Salir</a>
 </div>
 {% endblock %}
+

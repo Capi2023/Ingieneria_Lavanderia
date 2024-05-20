@@ -1,12 +1,12 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.db.models import Q
-from decimal import Decimal
 from .models import *
+from django.forms import inlineformset_factory
 
 
 class UsuarioForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
         model = User
@@ -23,7 +23,6 @@ class ClienteForm(forms.ModelForm):
         self.fields['user'].queryset = User.objects.filter(is_superuser=False).exclude(Q(clienteregistrado__isnull=False) | Q(repartidor__isnull=False))
 
 
-
 class RepartidorForm(forms.ModelForm):
     class Meta:
         model = Repartidor
@@ -34,32 +33,31 @@ class RepartidorForm(forms.ModelForm):
         self.fields['user'].queryset = User.objects.filter(is_superuser=False).exclude(Q(clienteregistrado__isnull=False) | Q(repartidor__isnull=False))
 
 
-
 class ClienteEditForm(forms.ModelForm):
     class Meta:
         model = ClienteRegistrado
-        exclude = ['user'] 
+        exclude = ['user']
 
 
-class TipoServicioForm(forms.ModelForm):
-    cliente = forms.CharField(widget=forms.HiddenInput())
-    dir_entrega = forms.CharField(widget=forms.HiddenInput())
-
+class PedidoForm(forms.ModelForm):
     class Meta:
-        model = TipoServicio
-        fields = ['cantidad_ropa', 'tipo_ropa', 'tipo_servicio', 'tipo_prenda', 'detalles_extra', 'precio']
-        widgets = {
-            'tipo_prenda': forms.CheckboxSelectMultiple,
-            'cantidad_ropa': forms.NumberInput(attrs={'step': '0.5', 'min': '0'}),
-            'administrador': forms.HiddenInput(),
-        }
+        model = Pedido
+        fields = ['cliente', 'servicio', 'estado']
 
-    def __init__(self, *args, cliente=None, **kwargs):
-        super().__init__(*args, **kwargs)
-        if cliente:
-            self.fields['cliente'].initial = cliente.user.pk
-            self.fields['dir_entrega'].initial = cliente.dir_cliente
+    def __init__(self, *args, **kwargs):
+        super(PedidoForm, self).__init__(*args, **kwargs)
+        self.fields['servicio'].queryset = Servicio.objects.all()
+        self.fields['cliente'].queryset = ClienteRegistrado.objects.all()  # Asegurarse que el cliente puede seleccionarse.
 
+
+class DetallePedidoForm(forms.ModelForm):
+    class Meta:
+        model = DetallePedido
+        fields = ['ropa', 'cantidad']
+
+    def __init__(self, *args, **kwargs):
+        super(DetallePedidoForm, self).__init__(*args, **kwargs)
+        self.fields['ropa'].queryset = Ropa.objects.all()  # Asegúrate de que se puedan seleccionar las ropas disponibles.
 
 class TarjetaForm(forms.ModelForm):
     class Meta:
@@ -67,28 +65,10 @@ class TarjetaForm(forms.ModelForm):
         fields = ['nom_titular', 'num_tarjeta', 'fecha_ven_tarjeta', 'nip_tarjeta']
 
 
-class PedidoForm(forms.ModelForm):
-    class Meta:
-        model = Pedidos
-        fields = ['fecha_actual', 'hora', 'sucursal', 'admin', 'rep', 'cliente', 'pago', 'estado']
-
-
-class PedidoClienteForm(forms.ModelForm):
-    servicios = forms.ModelMultipleChoiceField(
-        queryset=TipoServicio.objects.exclude(pedidos__isnull=False),
-        widget=forms.CheckboxSelectMultiple,
-        required=True
-    )
-
-    class Meta:
-        model = Pedidos
-        fields = ['servicios']
-
-
 class PagoForm(forms.ModelForm):
     class Meta:
         model = Pago
-        fields = ['metodo_pago']
+        fields = ['cliente', 'pedido', 'fecha_pago', 'monto', 'metodo_pago']
         widgets = {
             'metodo_pago': forms.Select(choices=[('Tarjeta de Crédito', 'Tarjeta de Crédito'), ('PayPal', 'PayPal')])
         }

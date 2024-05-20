@@ -6,6 +6,8 @@ from django.http import HttpResponse
 from django.contrib import messages
 from .forms import *
 from .models import *
+from django.db import transaction
+from django.forms import formset_factory
 
 
 def landing(request):
@@ -91,64 +93,43 @@ def actualizar_cliente(request, cliente_id):
     return render(request, 'actualizar_cliente.html', {'form': form, 'cliente': cliente})
 
 
-def crea_tipos_servicio(request):
-    cliente = ClienteRegistrado.objects.get(user=request.user)
-    administrador = Administrador.objects.first()
+def listar_pedidos(request):
+    pedidos = Pedido.objects.all()
+    return render(request, 'listar_pedidos.html', {'pedidos': pedidos})
+
+
+def crear_pedido(request):
     if request.method == 'POST':
-        form = TipoServicioForm(request.POST, cliente=cliente)
+        form = PedidoForm(request.POST)
         if form.is_valid():
-            # Añadir el cliente y el administrador al formulario antes de guardarlo
-            form.instance.cliente = cliente
-            form.instance.administrador = administrador
-            form.instance.dir_entrega = cliente.dir_cliente  # Corrección aquí
-            form.save()
-            return redirect('index_cliente')
+            pedido = form.save()
+            return redirect('editar_pedido', pedido_id=pedido.id)
     else:
-        form = TipoServicioForm(cliente=cliente)
-    
-    return render(request, 'crea_tipos_servicio.html', {'form': form})
-
-
-def juntar_pedidos(request):
-    tipo_servicios_disponibles = TipoServicio.objects.exclude(pedidos__isnull=False)
-    el_estad = EstadoPedido.EN_ESPERA
-    if request.method == 'POST':
-        form = PedidoClienteForm(request.POST)
-        if form.is_valid():
-            servicios_seleccionados = form.cleaned_data['servicios']
-            fecha_actual = datetime.now().date()
-            hora_actual = datetime.now().time()
-            primer_admin = Administrador.objects.first()
-            primer_rep = Repartidor.objects.first()
-            primera_sucursal = Sucursal.objects.first()
-            nuevo_pedido = Pedidos.objects.create(
-                fecha_actual=fecha_actual,
-                hora=hora_actual,
-                sucursal=primera_sucursal,
-                admin=primer_admin,
-                rep=primer_rep,
-                cliente=request.user.clienteregistrado,
-                estado=el_estad,
-            )
-            nuevo_pedido.servicios.set(servicios_seleccionados)
-            nuevo_pedido.save()
-            return redirect('index_cliente')
-        else:
-            print(form.errors)  # Imprime errores del formulario
-    else:
-        form = PedidoClienteForm()
-    return render(request, 'juntar_pedidos.html', {'form': form, 'tipo_servicios': tipo_servicios_disponibles})
-
+        form = PedidoForm()
+    return render(request, 'crear_pedido.html', {'form': form})
 
 def pedido_enviado(request):
     return render(request, 'pedido_enviado.html')
 
 
+def editar_pedido(request, pedido_id):
+    pedido = Pedido.objects.get(id=pedido_id)
+    DetallePedidoFormSet = inlineformset_factory(Pedido, DetallePedido, fields=('ropa', 'cantidad'), extra=1, can_delete=True)
+    if request.method == 'POST':
+        formset = DetallePedidoFormSet(request.POST, instance=pedido)
+        if formset.is_valid():
+            formset.save()
+            return redirect('index_cliente')  # O cualquier otra URL de confirmación
+    else:
+        formset = DetallePedidoFormSet(instance=pedido)
+    return render(request, 'editar_pedido.html', {'formset': formset, 'pedido': pedido})
+
+
 def ver_pedidos(request):
-    pedidos_en_espera = Pedidos.objects.filter(estado=EstadoPedido.EN_ESPERA)
-    pedidos_aceptados = Pedidos.objects.filter(estado=EstadoPedido.ACEPTADO)
-    pedidos_terminados = Pedidos.objects.filter(estado=EstadoPedido.TERMINADO)
-    pedidos_rechazados = Pedidos.objects.filter(estado=EstadoPedido.RECHAZADO)
+    pedidos_en_espera = Pedido.objects.filter(estado=Pedido.EstadoPedido.EN_ESPERA)
+    pedidos_aceptados = Pedido.objects.filter(estado=Pedido.EstadoPedido.ACEPTADO)
+    pedidos_terminados = Pedido.objects.filter(estado=Pedido.EstadoPedido.TERMINADO)
+    pedidos_rechazados = Pedido.objects.filter(estado=Pedido.EstadoPedido.RECHAZADO)
     
     return render(request, 'ver_pedidos.html', {
         'pedidos_en_espera': pedidos_en_espera,
@@ -159,14 +140,14 @@ def ver_pedidos(request):
 
 
 def cambiar_estado_pedido(request, pedido_id, nuevo_estado):
-    pedido = get_object_or_404(Pedidos, id=pedido_id)
+    pedido = get_object_or_404(Pedido, id=pedido_id)
     pedido.estado = nuevo_estado
     pedido.save()
     return redirect('ver_pedidos')
 
 
 def gestionar_pedido(request, pedido_id):
-    pedido = get_object_or_404(Pedidos, id=pedido_id)
+    pedido = get_object_or_404(Pedido, id=pedido_id)
     
     if request.method == 'POST':
         form = PedidoForm(request.POST, instance=pedido)
@@ -234,10 +215,10 @@ def editar_tarjeta(request, tarjeta_id):
 @login_required
 def pedidos_en_proceso(request):
     cliente = request.user.clienteregistrado
-    pedidos_en_espera = Pedidos.objects.filter(cliente=cliente, estado=EstadoPedido.EN_ESPERA)
-    pedidos_aceptados = Pedidos.objects.filter(cliente=cliente, estado=EstadoPedido.ACEPTADO)
-    pedidos_terminados = Pedidos.objects.filter(cliente=cliente, estado=EstadoPedido.TERMINADO)
-    pedidos_rechazados = Pedidos.objects.filter(cliente=cliente, estado=EstadoPedido.RECHAZADO)
+    pedidos_en_espera = Pedido.objects.filter(estado=Pedido.EstadoPedido.EN_ESPERA)
+    pedidos_aceptados = Pedido.objects.filter(estado=Pedido.EstadoPedido.ACEPTADO)
+    pedidos_terminados = Pedido.objects.filter(estado=Pedido.EstadoPedido.TERMINADO)
+    pedidos_rechazados = Pedido.objects.filter(estado=Pedido.EstadoPedido.RECHAZADO)
     
     return render(request, 'proceso_pedido.html', {
         'pedidos_en_espera': pedidos_en_espera,
@@ -249,7 +230,7 @@ def pedidos_en_proceso(request):
 
 @login_required
 def realizar_pago_cliente(request, pedido_id):
-    pedido = get_object_or_404(Pedidos, id=pedido_id, cliente=request.user.clienteregistrado)
+    pedido = get_object_or_404(Pedido, id=pedido_id, cliente=request.user.clienteregistrado)
 
     if request.method == 'POST':
         form = PagoForm(request.POST)
@@ -259,7 +240,7 @@ def realizar_pago_cliente(request, pedido_id):
             pago.cliente = request.user.clienteregistrado
             pago.monto = pedido.calcular_precio_aproximado()
             pago.save()
-            pedido.estado = EstadoPedido.TERMINADO  # Asumiendo que el pago cambia el estado a terminado
+            pedido.estado = Pedido.EstadoPedido.TERMINADO  # Asumiendo que el pago cambia el estado a terminado
             pedido.save()
             return redirect('pedidos_en_proceso')
     else:
@@ -270,7 +251,7 @@ def realizar_pago_cliente(request, pedido_id):
 
 @login_required
 def realizar_pago(request, pedido_id):
-    pedido = get_object_or_404(Pedidos, id=pedido_id)
+    pedido = get_object_or_404(Pedido, id=pedido_id)
 
     if request.method == 'POST':
         form = PagoForm(request.POST)
@@ -287,4 +268,5 @@ def realizar_pago(request, pedido_id):
         form = PagoForm()
 
     return render(request, 'realizar_pago.html', {'form': form, 'pedido': pedido})
+
 

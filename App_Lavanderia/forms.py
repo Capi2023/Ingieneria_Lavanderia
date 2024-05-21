@@ -49,6 +49,13 @@ class PedidoForm(forms.ModelForm):
         self.fields['servicio'].queryset = Servicio.objects.all()
         self.fields['cliente'].queryset = ClienteRegistrado.objects.all()
 
+    def calcular_total(self):
+        total = 0
+        detalles = self.detalles.all()
+        for detalle in detalles:
+            total += detalle.cantidad * (detalle.ropa.precio + (self.servicio.precio_adicional if self.servicio else 0))
+        return total
+
 
 class DetallePedidoForm(forms.ModelForm):
     class Meta:
@@ -73,4 +80,10 @@ class PagoForm(forms.ModelForm):
         widgets = {
             'metodo_pago': forms.Select(choices=[('Tarjeta de Crédito', 'Tarjeta de Crédito'), ('PayPal', 'PayPal')])
         }
+
+
+class RopaForm(forms.ModelForm):
+    class Meta:
+        model = Ropa
+        fields = ['nombre', 'precio']
 

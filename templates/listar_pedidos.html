@@ -10,6 +10,7 @@
             <th>Servicio</th>
             <th>Estado</th>
             <th>Detalles del Pedido</th>
+            <th>Total</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -26,6 +27,7 @@
                     {% endfor %}
                 </ul>
             </td>
+            <td>{{ pedido.total }}</td>
             <td>
                 <a href="{% url 'editar_pedido' pedido.id %}" class="btn btn-info">Editar Detalles</a>
                 <button type="button" class="btn btn-success" onclick="confirmarEnvio({{ pedido.id }})">Enviar Pedido</button>

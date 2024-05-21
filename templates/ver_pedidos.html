@@ -17,7 +17,7 @@
                             <th>Cliente</th>
                             <th>Dirección</th>
                             <th>Tipo(s) de Servicio</th>
-                            <th>Detalles Extra</th>
+                            <th>Total</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -36,13 +36,7 @@
                                     {% endfor %}
                                 </ul>
                             </td>
-                            <td>
-                                <ul>
-                                    {% for detalle in pedido.detalles.all %}
-                                    <li>{{ detalle.ropa.detalles_extra }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </td>
+                            <td>{{ pedido.total }}</td>
                             <td>
                                 <form method="post" action="{% url 'cambiar_estado_pedido' pedido.id 'AC' %}" style="display:inline;">
                                     {% csrf_token %}
@@ -76,7 +70,7 @@
                             <th>Cliente</th>
                             <th>Dirección</th>
                             <th>Tipo(s) de Servicio</th>
-                            <th>Detalles Extra</th>
+                            <th>Total</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -95,13 +89,7 @@
                                     {% endfor %}
                                 </ul>
                             </td>
-                            <td>
-                                <ul>
-                                    {% for detalle in pedido.detalles.all %}
-                                    <li>{{ detalle.ropa.descripcion }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </td>
+                            <td>{{ pedido.total }}</td>
                             <td>
                                 <form method="post" action="{% url 'cambiar_estado_pedido' pedido.id 'TE' %}" style="display:inline;">
                                     {% csrf_token %}
@@ -134,7 +122,7 @@
                             <th>Cliente</th>
                             <th>Dirección</th>
                             <th>Tipo(s) de Servicio</th>
-                            <th>Detalles Extra</th>
+                            <th>Total</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -153,13 +141,7 @@
                                     {% endfor %}
                                 </ul>
                             </td>
-                            <td>
-                                <ul>
-                                    {% for detalle in pedido.detalles.all %}
-                                    <li>{{ detalle.ropa.descripcion }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </td>
+                            <td>{{ pedido.total }}</td>
                             <td>
                                 {% if not pedido.pago %}
                                 <a href="{% url 'realizar_pago' pedido.id %}" class="btn btn-secondary">Realizar Pago</a>
@@ -187,7 +169,7 @@
                             <th>Cliente</th>
                             <th>Dirección</th>
                             <th>Tipo(s) de Servicio</th>
-                            <th>Detalles Extra</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -205,13 +187,7 @@
                                     {% endfor %}
                                 </ul>
                             </td>
-                            <td>
-                                <ul>
-                                    {% for detalle in pedido.detalles.all %}
-                                    <li>{{ detalle.ropa.descripcion }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </td>
+                            <td>{{ pedido.total }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

@@ -300,3 +300,42 @@ def realizar_pago(request, pedido_id):
     return render(request, 'realizar_pago.html', {'form': form, 'pedido': pedido})
 
 
+def listar_ropa(request):
+    prendas = Ropa.objects.all()
+    return render(request, 'listar_ropa.html', {'prendas': prendas})
+
+
+@require_POST
+def eliminar_ropa(request, ropa_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Autenticación requerida'}, status=403)
+    ropa = get_object_or_404(Ropa, pk=ropa_id)
+    ropa.delete()
+    return JsonResponse({'mensaje': 'Ropa eliminada'})
+
+
+def crear_ropa(request):
+    if request.method == 'POST':
+        form = RopaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_ropa')
+    else:
+        form = RopaForm()
+    return render(request, 'crear_ropa.html', {'form': form})
+
+
+def editar_ropa(request, ropa_id):
+    prenda = get_object_or_404(Ropa, pk=ropa_id)
+    if request.method == 'POST':
+        form = RopaForm(request.POST, instance=prenda)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_ropa')
+    else:
+        form = RopaForm(instance=prenda)
+    return render(request, 'editar_ropa.html', {'form': form})
+
+
+
+

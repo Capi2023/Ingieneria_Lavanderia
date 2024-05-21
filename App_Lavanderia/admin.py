@@ -87,4 +87,3 @@ admin.site.register(Sucursal, SucursalAdmin)
 admin.site.register(Pago, PagoAdmin)
 admin.site.register(Tarjeta, TarjetaAdmin)
 admin.site.register(Puntuacion, PuntuacionAdmin)
-

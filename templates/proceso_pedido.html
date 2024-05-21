@@ -14,6 +14,7 @@
                     <p class="card-text">Fecha: {{ pedido.fecha_pedido.date }}</p>
                     <p class="card-text">Hora: {{ pedido.fecha_pedido.hour }}</p>
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
+                    <p class="card-text">Total: {{ pedido.total }}</p>
                     <p class="card-text">Servicios:</p>
                     <ul>
                         {% for detalle in pedido.detalles.all %}
@@ -43,6 +44,7 @@
                     <p class="card-text">Fecha: {{ pedido.fecha_pedido }}</p>
                     <p class="card-text">Hora: {{ pedido.hora }}</p>
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
+                    <p class="card-text">Total: {{ pedido.total }}</p>
                     <p class="card-text">Servicios:</p>
                     <ul>
                         {% for detalle in pedido.detalles.all %}
@@ -77,6 +79,7 @@
                     <p class="card-text">Fecha: {{ pedido.fecha_pedido }}</p>
                     <p class="card-text">Hora: {{ pedido.hora }}</p>
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
+                    <p class="card-text">Total: {{ pedido.total }}</p>
                     <p class="card-text">Servicios:</p>
                     <ul>
                         {% for detalle in pedido.detalles.all %}
@@ -111,6 +114,7 @@
                     <p class="card-text">Fecha: {{ pedido.fecha_pedido }}</p>
                     <p class="card-text">Hora: {{ pedido.hora }}</p>
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
+                    <p class="card-text">Total: {{ pedido.total }}</p>
                     <p class="card-text">Servicios:</p>
                     <ul>
                         {% for detalle in pedido.detalles.all %}

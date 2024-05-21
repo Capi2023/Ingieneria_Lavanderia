@@ -2,7 +2,8 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 import datetime
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Tarjeta(models.Model):
     nom_titular = models.CharField(max_length=100)
@@ -65,12 +66,28 @@ class EstadoPedido(models.TextChoices):
     TERMINADO = 'TE', 'Terminado'
     RECHAZADO = 'RE', 'Rechazado'
 
+
 class Pedido(models.Model):
-    estado = models.CharField(max_length=2,choices=EstadoPedido.choices,default=EstadoPedido.CREANDO,)
+    estado = models.CharField(max_length=2, choices=EstadoPedido.choices, default=EstadoPedido.CREANDO,)
     fecha_pedido = models.DateTimeField(auto_now_add=True)
     cliente = models.ForeignKey('ClienteRegistrado', on_delete=models.CASCADE)
     administrador = models.ForeignKey('Administrador', on_delete=models.SET_NULL, null=True)
     servicio = models.ForeignKey('Servicio', on_delete=models.SET_NULL, null=True, related_name='servicios_pedido')
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Primero guarda el objeto para asegurar que tiene una clave primaria
+        self.total = self.calcular_total()  # Ahora puedes calcular el total
+        super().save(update_fields=['total'])  # Guarda nuevamente para actualizar el campo total
+
+    def calcular_total(self):
+        total = 0
+        for detalle in self.detalles.all():
+            total += detalle.cantidad * detalle.ropa.precio
+        if self.servicio:
+            total += self.servicio.precio_adicional
+        return total
+
 
     def __str__(self):
         return f'Pedido {self.id}'
@@ -83,6 +100,12 @@ class DetallePedido(models.Model):
 
     def __str__(self):
         return f'{self.ropa.nombre} - {self.cantidad} unidades'
+
+
+@receiver(post_save, sender=DetallePedido)
+def update_pedido_total(sender, instance, **kwargs):
+    if instance.pedido:
+        instance.pedido.save()
 
 
 class Ruta(models.Model):

@@ -36,5 +36,9 @@ urlpatterns = [
     path('gestionar_pedido/<int:pedido_id>/', views.gestionar_pedido, name='gestionar_pedido'),
     path('cambiar_estado_pedido/<int:pedido_id>/<str:nuevo_estado>/', views.cambiar_estado_pedido, name='cambiar_estado_pedido'),
     path('realizar_pago/<int:pedido_id>/', views.realizar_pago, name='realizar_pago'),
+    path('ropa/', views.listar_ropa, name='listar_ropa'),
+    path('ropa/eliminar/<int:ropa_id>/', views.eliminar_ropa, name='eliminar_ropa'),
+    path('ropa/crear/', views.crear_ropa, name='crear_ropa'),
+    path('ropa/editar/<int:ropa_id>/', views.editar_ropa, name='editar_ropa'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

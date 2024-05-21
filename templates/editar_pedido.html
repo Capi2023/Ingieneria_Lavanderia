@@ -1,50 +1,36 @@
 {% extends 'base_cliente.html' %}
-{% load static %}
-{% load widget_tweaks %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Añadir Detalles al Pedido: {{ pedido.id }}</h2>
-    <form method="post" class="mb-3">
-        {% csrf_token %}
-        {{ formset.management_form }}
-        {% for form in formset %}
-            <div class="mb-3 row">
-                <div class="col-md-6">
-                    <label for="{{ form.ropa.id_for_label }}" class="form-label">{{ form.ropa.label }}</label>
-                    {{ form.ropa|add_class:"form-select" }}
-                </div>
-                <div class="col-md-6">
-                    <label for="{{ form.cantidad.id_for_label }}" class="form-label">{{ form.cantidad.label }}</label>
-                    {{ form.cantidad|add_class:"form-control" }}
-                </div>
-            </div>
-        {% endfor %}
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary">Guardar Detalles</button>
-            <a href="{% url 'listar_pedidos' %}" class="btn btn-secondary">Salir</a>
+<h2>Añadir Detalles al Pedido: {{ pedido.id }}</h2>
+<form method="post">
+    {% csrf_token %}
+    <p>Total estimado del pedido: ${{ pedido.total }}</p>
+    {{ formset.management_form }}
+    {% for form in formset %}
+        <div class="detalle-pedido">
+            {{ form.as_p }}
         </div>
-    </form>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Guardar Detalles</button>
+    <a href="{% url 'listar_pedidos' %}" class="btn btn-secondary">Salir</a>
+</form>
 
-    <h3>Detalles Actuales del Pedido</h3>
-    <table class="table">
-        <thead>
+<h3>Detalles Actuales del Pedido</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ropa</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for detalle in pedido.detalles.all %}
             <tr>
-                <th>Ropa</th>
-                <th>Cantidad</th>
+                <td>{{ detalle.ropa.nombre }}</td>
+                <td>{{ detalle.cantidad }}</td>
             </tr>
-        </thead>
-        <tbody>
-            {% for detalle in pedido.detalles.all %}
-                <tr>
-                    <td>{{ detalle.ropa.nombre }}</td>
-                    <td>{{ detalle.cantidad }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
-
-
 

@@ -47,7 +47,7 @@ class PedidoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PedidoForm, self).__init__(*args, **kwargs)
         self.fields['servicio'].queryset = Servicio.objects.all()
-        self.fields['cliente'].queryset = ClienteRegistrado.objects.all()  # Asegurarse que el cliente puede seleccionarse.
+        self.fields['cliente'].queryset = ClienteRegistrado.objects.all()
 
 
 class DetallePedidoForm(forms.ModelForm):
@@ -57,7 +57,8 @@ class DetallePedidoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(DetallePedidoForm, self).__init__(*args, **kwargs)
-        self.fields['ropa'].queryset = Ropa.objects.all()  # Asegúrate de que se puedan seleccionar las ropas disponibles.
+        self.fields['ropa'].queryset = Ropa.objects.all()
+
 
 class TarjetaForm(forms.ModelForm):
     class Meta:

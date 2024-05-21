@@ -55,17 +55,18 @@ class Servicio(models.Model):
     precio_adicional = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
 
     def __str__(self):
-        return f'{self.tipo} - ${self.precio_adicional}'
+        return f'{self.tipo}'
 
 
 class EstadoPedido(models.TextChoices):
+    CREANDO = 'CR', 'Creando'
     EN_ESPERA = 'EN', 'En espera'
     ACEPTADO = 'AC', 'Aceptado'
     TERMINADO = 'TE', 'Terminado'
     RECHAZADO = 'RE', 'Rechazado'
 
 class Pedido(models.Model):
-    estado = models.CharField(max_length=2,choices=EstadoPedido.choices,default=EstadoPedido.EN_ESPERA,)
+    estado = models.CharField(max_length=2,choices=EstadoPedido.choices,default=EstadoPedido.CREANDO,)
     fecha_pedido = models.DateTimeField(auto_now_add=True)
     cliente = models.ForeignKey('ClienteRegistrado', on_delete=models.CASCADE)
     administrador = models.ForeignKey('Administrador', on_delete=models.SET_NULL, null=True)

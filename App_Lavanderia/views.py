@@ -8,6 +8,11 @@ from .forms import *
 from .models import *
 from django.db import transaction
 from django.forms import formset_factory
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.forms import inlineformset_factory
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 
 def landing(request):
@@ -94,7 +99,7 @@ def actualizar_cliente(request, cliente_id):
 
 
 def listar_pedidos(request):
-    pedidos = Pedido.objects.all()
+    pedidos = Pedido.objects.filter(estado=EstadoPedido.CREANDO)
     return render(request, 'listar_pedidos.html', {'pedidos': pedidos})
 
 
@@ -112,24 +117,49 @@ def pedido_enviado(request):
     return render(request, 'pedido_enviado.html')
 
 
+@require_POST
+def eliminar_pedido(request, pedido_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Autenticación requerida'}, status=403)
+    pedido = get_object_or_404(Pedido, pk=pedido_id)
+    pedido.delete()
+    return JsonResponse({'mensaje': 'Pedido eliminado'})
+
+
 def editar_pedido(request, pedido_id):
     pedido = Pedido.objects.get(id=pedido_id)
-    DetallePedidoFormSet = inlineformset_factory(Pedido, DetallePedido, fields=('ropa', 'cantidad'), extra=1, can_delete=True)
+    # Ajuste aquí para siempre incluir un formulario extra
+    DetallePedidoFormSet = inlineformset_factory(
+        Pedido, DetallePedido, fields=('ropa', 'cantidad'), extra=1, can_delete=True
+    )
+    
     if request.method == 'POST':
         formset = DetallePedidoFormSet(request.POST, instance=pedido)
         if formset.is_valid():
             formset.save()
-            return redirect('index_cliente')  # O cualquier otra URL de confirmación
+            # Redirige a la misma página para confirmar los cambios y mantener un formulario extra
+            return redirect('editar_pedido', pedido_id=pedido_id)
     else:
         formset = DetallePedidoFormSet(instance=pedido)
+    
     return render(request, 'editar_pedido.html', {'formset': formset, 'pedido': pedido})
 
 
+@csrf_exempt
+def enviar_pedido(request, pedido_id):
+    if request.method == 'POST':
+        pedido = get_object_or_404(Pedido, pk=pedido_id)
+        pedido.estado = EstadoPedido.EN_ESPERA
+        pedido.save()
+        return JsonResponse({'success': True}, status=200)
+    return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+
 def ver_pedidos(request):
-    pedidos_en_espera = Pedido.objects.filter(estado=Pedido.EstadoPedido.EN_ESPERA)
-    pedidos_aceptados = Pedido.objects.filter(estado=Pedido.EstadoPedido.ACEPTADO)
-    pedidos_terminados = Pedido.objects.filter(estado=Pedido.EstadoPedido.TERMINADO)
-    pedidos_rechazados = Pedido.objects.filter(estado=Pedido.EstadoPedido.RECHAZADO)
+    pedidos_en_espera = Pedido.objects.filter(estado=EstadoPedido.EN_ESPERA)
+    pedidos_aceptados = Pedido.objects.filter(estado=EstadoPedido.ACEPTADO)
+    pedidos_terminados = Pedido.objects.filter(estado=EstadoPedido.TERMINADO)
+    pedidos_rechazados = Pedido.objects.filter(estado=EstadoPedido.RECHAZADO)
     
     return render(request, 'ver_pedidos.html', {
         'pedidos_en_espera': pedidos_en_espera,
@@ -215,10 +245,10 @@ def editar_tarjeta(request, tarjeta_id):
 @login_required
 def pedidos_en_proceso(request):
     cliente = request.user.clienteregistrado
-    pedidos_en_espera = Pedido.objects.filter(estado=Pedido.EstadoPedido.EN_ESPERA)
-    pedidos_aceptados = Pedido.objects.filter(estado=Pedido.EstadoPedido.ACEPTADO)
-    pedidos_terminados = Pedido.objects.filter(estado=Pedido.EstadoPedido.TERMINADO)
-    pedidos_rechazados = Pedido.objects.filter(estado=Pedido.EstadoPedido.RECHAZADO)
+    pedidos_en_espera = Pedido.objects.filter(estado=EstadoPedido.EN_ESPERA)
+    pedidos_aceptados = Pedido.objects.filter(estado=EstadoPedido.ACEPTADO)
+    pedidos_terminados = Pedido.objects.filter(estado=EstadoPedido.TERMINADO)
+    pedidos_rechazados = Pedido.objects.filter(estado=EstadoPedido.RECHAZADO)
     
     return render(request, 'proceso_pedido.html', {
         'pedidos_en_espera': pedidos_en_espera,

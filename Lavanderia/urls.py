@@ -18,6 +18,8 @@ urlpatterns = [
     path('miembros/', include('django.contrib.auth.urls')),
     path('pedidos/', views.listar_pedidos, name='listar_pedidos'),
     path('pedido/nuevo/', views.crear_pedido, name='crear_pedido'),
+    path('pedidos/enviar/<int:pedido_id>/', views.enviar_pedido, name='enviar_pedido'),
+    path('pedidos/eliminar/<int:pedido_id>/', views.eliminar_pedido, name='eliminar_pedido'),
     path('pedido/editar/<int:pedido_id>/', views.editar_pedido, name='editar_pedido'),
     path('pedido_enviado/', views.pedido_enviado, name='pedido_enviado'),
     path('pedidos_en_proceso/', views.pedidos_en_proceso, name='pedidos_en_proceso'),

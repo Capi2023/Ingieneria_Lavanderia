@@ -11,18 +11,15 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
-                    <p class="card-text">Fecha: {{ pedido.fecha_actual }}</p>
-                    <p class="card-text">Hora: {{ pedido.hora }}</p>
+                    <p class="card-text">Fecha: {{ pedido.fecha_pedido.date }}</p>
+                    <p class="card-text">Hora: {{ pedido.fecha_pedido.hour }}</p>
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
                     <p class="card-text">Servicios:</p>
                     <ul>
-                        {% for prenda in pedido.prendaspedido_set.all %}
+                        {% for detalle in pedido.detalles.all %}
                         <li>
-                            <p><strong>Tipo de Prenda:</strong> {{ prenda.tipo_prenda.nombre }}</p>
-                            <p><strong>Tipo de Servicio:</strong> {{ prenda.tipo_servicio.get_tipo_servicio_display }}</p>
-                            <p><strong>Cantidad:</strong> {{ prenda.cantidad }}</p>
-                            <p><strong>Precio Unitario:</strong> {{ prenda.precio_unitario }}</p>
-                            <p><strong>Precio Total:</strong> {{ prenda.precio_total }}</p>
+                            <p><strong>Ropa:</strong> {{ detalle.ropa.nombre }}</p>
+                            <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
                         </li>
                         {% endfor %}
                     </ul>
@@ -43,18 +40,15 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
-                    <p class="card-text">Fecha: {{ pedido.fecha_actual }}</p>
+                    <p class="card-text">Fecha: {{ pedido.fecha_pedido }}</p>
                     <p class="card-text">Hora: {{ pedido.hora }}</p>
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
                     <p class="card-text">Servicios:</p>
                     <ul>
-                        {% for prenda in pedido.prendaspedido_set.all %}
+                        {% for detalle in pedido.detalles.all %}
                         <li>
-                            <p><strong>Tipo de Prenda:</strong> {{ prenda.tipo_prenda.nombre }}</p>
-                            <p><strong>Tipo de Servicio:</strong> {{ prenda.tipo_servicio.get_tipo_servicio_display }}</p>
-                            <p><strong>Cantidad:</strong> {{ prenda.cantidad }}</p>
-                            <p><strong>Precio Unitario:</strong> {{ prenda.precio_unitario }}</p>
-                            <p><strong>Precio Total:</strong> {{ prenda.precio_total }}</p>
+                            <p><strong>Ropa:</strong> {{ detalle.ropa.nombre }}</p>
+                            <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
                         </li>
                         {% endfor %}
                     </ul>
@@ -80,18 +74,15 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
-                    <p class="card-text">Fecha: {{ pedido.fecha_actual }}</p>
+                    <p class="card-text">Fecha: {{ pedido.fecha_pedido }}</p>
                     <p class="card-text">Hora: {{ pedido.hora }}</p>
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
                     <p class="card-text">Servicios:</p>
                     <ul>
-                        {% for prenda in pedido.prendaspedido_set.all %}
+                        {% for detalle in pedido.detalles.all %}
                         <li>
-                            <p><strong>Tipo de Prenda:</strong> {{ prenda.tipo_prenda.nombre }}</p>
-                            <p><strong>Tipo de Servicio:</strong> {{ prenda.tipo_servicio.get_tipo_servicio_display }}</p>
-                            <p><strong>Cantidad:</strong> {{ prenda.cantidad }}</p>
-                            <p><strong>Precio Unitario:</strong> {{ prenda.precio_unitario }}</p>
-                            <p><strong>Precio Total:</strong> {{ prenda.precio_total }}</p>
+                            <p><strong>Ropa:</strong> {{ detalle.ropa.nombre }}</p>
+                            <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
                         </li>
                         {% endfor %}
                     </ul>
@@ -117,18 +108,15 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
-                    <p class="card-text">Fecha: {{ pedido.fecha_actual }}</p>
+                    <p class="card-text">Fecha: {{ pedido.fecha_pedido }}</p>
                     <p class="card-text">Hora: {{ pedido.hora }}</p>
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
                     <p class="card-text">Servicios:</p>
                     <ul>
-                        {% for prenda in pedido.prendaspedido_set.all %}
+                        {% for detalle in pedido.detalles.all %}
                         <li>
-                            <p><strong>Tipo de Prenda:</strong> {{ prenda.tipo_prenda.nombre }}</p>
-                            <p><strong>Tipo de Servicio:</strong> {{ prenda.tipo_servicio.get_tipo_servicio_display }}</p>
-                            <p><strong>Cantidad:</strong> {{ prenda.cantidad }}</p>
-                            <p><strong>Precio Unitario:</strong> {{ prenda.precio_unitario }}</p>
-                            <p><strong>Precio Total:</strong> {{ prenda.precio_total }}</p>
+                            <p><strong>Ropa:</strong> {{ detalle.ropa.nombre }}</p>
+                            <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
                         </li>
                         {% endfor %}
                     </ul>

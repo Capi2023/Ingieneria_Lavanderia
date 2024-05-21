@@ -25,30 +25,30 @@
                         {% for pedido in pedidos_en_espera %}
                         <tr>
                             <td>{{ pedido.id }}</td>
-                            <td>{{ pedido.fecha_actual }}</td>
-                            <td>{{ pedido.hora }}</td>
-                            <td>{{ pedido.cliente }}</td>
-                            <td>{{ pedido.servicios.first.dir_entrega }}</td>
+                            <td>{{ pedido.fecha_pedido.date }}</td>
+                            <td>{{ pedido.fecha_pedido.time }}</td>
+                            <td>{{ pedido.cliente.user.username }}</td>
+                            <td>{{ pedido.cliente.dir_cliente }}</td>
                             <td>
                                 <ul>
-                                    {% for servicio in pedido.servicios.all %}
-                                    <li>{{ servicio.get_tipo_servicio_display }}</li>
+                                    {% for detalle in pedido.detalles.all %}
+                                    <li>{{ detalle.ropa.nombre }} - Cantidad: {{ detalle.cantidad }}</li>
                                     {% endfor %}
                                 </ul>
                             </td>
                             <td>
                                 <ul>
-                                    {% for servicio in pedido.servicios.all %}
-                                    <li>{{ servicio.detalles_extra }}</li>
+                                    {% for detalle in pedido.detalles.all %}
+                                    <li>{{ detalle.ropa.detalles_extra }}</li>
                                     {% endfor %}
                                 </ul>
                             </td>
                             <td>
-                                <form method="post" action="{% url 'cambiar_estado_pedido' pedido.id 'ACEPTADO' %}" style="display:inline;">
+                                <form method="post" action="{% url 'cambiar_estado_pedido' pedido.id 'AC' %}" style="display:inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-success" onclick="return confirm('¿Estás seguro de que deseas aceptar este pedido?');">Aceptar</button>
                                 </form>
-                                <form method="post" action="{% url 'cambiar_estado_pedido' pedido.id 'RECHAZADO' %}" style="display:inline;">
+                                <form method="post" action="{% url 'cambiar_estado_pedido' pedido.id 'RE' %}" style="display:inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas rechazar este pedido?');">Rechazar</button>
                                 </form>
@@ -84,26 +84,26 @@
                         {% for pedido in pedidos_aceptados %}
                         <tr>
                             <td>{{ pedido.id }}</td>
-                            <td>{{ pedido.fecha_actual }}</td>
-                            <td>{{ pedido.hora }}</td>
-                            <td>{{ pedido.cliente }}</td>
-                            <td>{{ pedido.servicios.first.dir_entrega }}</td>
+                            <td>{{ pedido.fecha_pedido.date }}</td>
+                            <td>{{ pedido.fecha_pedido.time }}</td>
+                            <td>{{ pedido.cliente.user.username }}</td>
+                            <td>{{ pedido.cliente.dir_cliente }}</td>
                             <td>
                                 <ul>
-                                    {% for servicio in pedido.servicios.all %}
-                                    <li>{{ servicio.get_tipo_servicio_display }}</li>
+                                    {% for detalle in pedido.detalles.all %}
+                                    <li>{{ detalle.ropa.nombre }} - Cantidad: {{ detalle.cantidad }}</li>
                                     {% endfor %}
                                 </ul>
                             </td>
                             <td>
                                 <ul>
-                                    {% for servicio in pedido.servicios.all %}
-                                    <li>{{ servicio.detalles_extra }}</li>
+                                    {% for detalle in pedido.detalles.all %}
+                                    <li>{{ detalle.ropa.descripcion }}</li>
                                     {% endfor %}
                                 </ul>
                             </td>
                             <td>
-                                <form method="post" action="{% url 'cambiar_estado_pedido' pedido.id 'TERMINADO' %}" style="display:inline;">
+                                <form method="post" action="{% url 'cambiar_estado_pedido' pedido.id 'TE' %}" style="display:inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-success" onclick="return confirm('¿Estás seguro de que deseas marcar este pedido como terminado?');">Terminar</button>
                                 </form>
@@ -142,21 +142,21 @@
                         {% for pedido in pedidos_terminados %}
                         <tr>
                             <td>{{ pedido.id }}</td>
-                            <td>{{ pedido.fecha_actual }}</td>
-                            <td>{{ pedido.hora }}</td>
-                            <td>{{ pedido.cliente }}</td>
-                            <td>{{ pedido.servicios.first.dir_entrega }}</td>
+                            <td>{{ pedido.fecha_pedido.date }}</td>
+                            <td>{{ pedido.fecha_pedido.time }}</td>
+                            <td>{{ pedido.cliente.user.username }}</td>
+                            <td>{{ pedido.cliente.dir_cliente }}</td>
                             <td>
                                 <ul>
-                                    {% for servicio in pedido.servicios.all %}
-                                    <li>{{ servicio.get_tipo_servicio_display }}</li>
+                                    {% for detalle in pedido.detalles.all %}
+                                    <li>{{ detalle.ropa.nombre }} - Cantidad: {{ detalle.cantidad }}</li>
                                     {% endfor %}
                                 </ul>
                             </td>
                             <td>
                                 <ul>
-                                    {% for servicio in pedido.servicios.all %}
-                                    <li>{{ servicio.detalles_extra }}</li>
+                                    {% for detalle in pedido.detalles.all %}
+                                    <li>{{ detalle.ropa.descripcion }}</li>
                                     {% endfor %}
                                 </ul>
                             </td>
@@ -194,21 +194,21 @@
                         {% for pedido in pedidos_rechazados %}
                         <tr>
                             <td>{{ pedido.id }}</td>
-                            <td>{{ pedido.fecha_actual }}</td>
-                            <td>{{ pedido.hora }}</td>
-                            <td>{{ pedido.cliente }}</td>
-                            <td>{{ pedido.servicios.first.dir_entrega }}</td>
+                            <td>{{ pedido.fecha_pedido.date }}</td>
+                            <td>{{ pedido.fecha_pedido.time }}</td>
+                            <td>{{ pedido.cliente.user.username }}</td>
+                            <td>{{ pedido.cliente.dir_cliente }}</td>
                             <td>
                                 <ul>
-                                    {% for servicio in pedido.servicios.all %}
-                                    <li>{{ servicio.get_tipo_servicio_display }}</li>
+                                    {% for detalle in pedido.detalles.all %}
+                                    <li>{{ detalle.ropa.nombre }} - Cantidad: {{ detalle.cantidad }}</li>
                                     {% endfor %}
                                 </ul>
                             </td>
                             <td>
                                 <ul>
-                                    {% for servicio in pedido.servicios.all %}
-                                    <li>{{ servicio.detalles_extra }}</li>
+                                    {% for detalle in pedido.detalles.all %}
+                                    <li>{{ detalle.ropa.descripcion }}</li>
                                     {% endfor %}
                                 </ul>
                             </td>

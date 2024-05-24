@@ -56,7 +56,6 @@ class PedidoForm(forms.ModelForm):
             total += detalle.cantidad * (detalle.ropa.precio + (self.servicio.precio_adicional if self.servicio else 0))
         return total
 
-
 class DetallePedidoForm(forms.ModelForm):
     class Meta:
         model = DetallePedido
@@ -65,7 +64,7 @@ class DetallePedidoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(DetallePedidoForm, self).__init__(*args, **kwargs)
         self.fields['ropa'].queryset = Ropa.objects.all()
-
+        
 
 class TarjetaForm(forms.ModelForm):
     class Meta:

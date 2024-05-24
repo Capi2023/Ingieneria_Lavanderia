@@ -24,6 +24,7 @@ urlpatterns = [
     path('pedido_enviado/', views.pedido_enviado, name='pedido_enviado'),
     path('pedidos_en_proceso/', views.pedidos_en_proceso, name='pedidos_en_proceso'),
     path('realizar_pago_cliente/<int:pedido_id>/', views.realizar_pago_cliente, name='realizar_pago_cliente'),
+    path('pedido/eliminar_detalle/<int:detalle_id>/', views.eliminar_detalle_pedido, name='eliminar_detalle_pedido'),
     # Administrador
     path('crear_usuario/', views.crear_usuario, name='crear_usuario'),
     path('crear_cliente/', views.crear_cliente, name='crear_cliente'),

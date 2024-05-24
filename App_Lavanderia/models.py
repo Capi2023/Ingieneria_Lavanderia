@@ -47,7 +47,7 @@ class Ropa(models.Model):
     precio = models.DecimalField(max_digits=6, decimal_places=2)
 
     def __str__(self):
-        return self.nombre
+        return f'{self.nombre} - ${self.precio}'
 
 
 class Servicio(models.Model):

@@ -11,6 +11,8 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
+                    <p class="card-text">Cliente: {{ pedido.cliente.user.username }}</p>
+                    <p class="card-text">Direccion: {{ pedido.cliente.dir_cliente }}</p>
                     <p class="card-text">Fecha: {{ pedido.fecha_pedido.date }}</p>
                     <p class="card-text">Hora: {{ pedido.fecha_pedido.hour }}</p>
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
@@ -41,6 +43,8 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
+                    <p class="card-text">Cliente: {{ pedido.cliente.user.username }}</p>
+                    <p class="card-text">Direccion: {{ pedido.cliente.dir_cliente }}</p>
                     <p class="card-text">Fecha: {{ pedido.fecha_pedido }}</p>
                     <p class="card-text">Hora: {{ pedido.hora }}</p>
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
@@ -76,6 +80,8 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
+                    <p class="card-text">Cliente: {{ pedido.cliente.user.username }}</p>
+                    <p class="card-text">Direccion: {{ pedido.cliente.dir_cliente }}</p>
                     <p class="card-text">Fecha: {{ pedido.fecha_pedido }}</p>
                     <p class="card-text">Hora: {{ pedido.hora }}</p>
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
@@ -111,6 +117,8 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
+                    <p class="card-text">Cliente: {{ pedido.cliente.user.username }}</p>
+                    <p class="card-text">Direccion: {{ pedido.cliente.dir_cliente }}</p>
                     <p class="card-text">Fecha: {{ pedido.fecha_pedido }}</p>
                     <p class="card-text">Hora: {{ pedido.hora }}</p>
                     <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>

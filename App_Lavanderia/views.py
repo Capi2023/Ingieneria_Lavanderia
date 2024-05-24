@@ -127,22 +127,27 @@ def eliminar_pedido(request, pedido_id):
 
 
 def editar_pedido(request, pedido_id):
-    pedido = Pedido.objects.get(id=pedido_id)
-    # Ajuste aquí para siempre incluir un formulario extra
-    DetallePedidoFormSet = inlineformset_factory(
-        Pedido, DetallePedido, fields=('ropa', 'cantidad'), extra=1, can_delete=True
-    )
-    
+    pedido = get_object_or_404(Pedido, id=pedido_id)
     if request.method == 'POST':
-        formset = DetallePedidoFormSet(request.POST, instance=pedido)
-        if formset.is_valid():
-            formset.save()
-            # Redirige a la misma página para confirmar los cambios y mantener un formulario extra
-            return redirect('editar_pedido', pedido_id=pedido_id)
+        form = DetallePedidoForm(request.POST)
+        if form.is_valid():
+            detalle_pedido = form.save(commit=False)
+            detalle_pedido.pedido = pedido
+            detalle_pedido.save()
+            return redirect('editar_pedido', pedido_id=pedido.id)
     else:
-        formset = DetallePedidoFormSet(instance=pedido)
+        form = DetallePedidoForm()
     
-    return render(request, 'editar_pedido.html', {'formset': formset, 'pedido': pedido})
+    return render(request, 'editar_pedido.html', {'form': form, 'pedido': pedido})
+
+
+def eliminar_detalle_pedido(request, detalle_id):
+    if request.method == 'POST':
+        detalle = get_object_or_404(DetallePedido, id=detalle_id)
+        pedido_id = detalle.pedido.id
+        detalle.delete()
+        return redirect('editar_pedido', pedido_id=pedido_id)
+    return redirect('editar_pedido', pedido_id=detalle.pedido.id)
 
 
 @csrf_exempt

@@ -3,11 +3,14 @@
 {% block content %}
 <h2>Listado de Pedidos</h2>
 <a href="{% url 'crear_pedido' %}" class="btn btn-success">Crear Nuevo Pedido</a>
+
 <table class="table">
     <thead>
         <tr>
             <th>ID del Pedido</th>
             <th>Servicio</th>
+            <th>Cliente</th>
+            <th>Direccion</th>
             <th>Estado</th>
             <th>Detalles del Pedido</th>
             <th>Total</th>
@@ -19,6 +22,8 @@
         <tr>
             <td>{{ pedido.id }}</td>
             <td>{{ pedido.servicio }}</td>
+            <td>{{ pedido.cliente.user.username }}</td>
+            <td>{{ pedido.cliente.dir_cliente }}</td>
             <td>{{ pedido.get_estado_display }}</td>
             <td>
                 <ul>
@@ -82,6 +87,4 @@ function confirmarEnvio(id) {
 
 </script>
 {% endblock %}
-
-
 

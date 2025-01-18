@@ -69,11 +69,11 @@ WSGI_APPLICATION = 'Lavanderia.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ropasecada',
+        'NAME': 'base_lava',
         'USER': 'postgres',
         'PASSWORD': 'Emoliano13',
         'HOST': 'localhost',
-        'PORT': '5433',
+        'PORT': '5432',
     }
 }
 
